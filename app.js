@@ -306,19 +306,80 @@ Golden Rule: ${question.rule_takeaway}`;
   // Initial Load: Fetch questions & start mini-quiz
   initQuizSession();
 
-  async function fetchQuestionBank() {
+  // -------------------------------------------------------------
+  // SEEN QUESTION TRACKING & ROTATION ENGINE
+  // -------------------------------------------------------------
+
+  function getSeenQuestionKeys() {
     try {
-      const dbQuestions = await fetchSourceQuestionsDirect();
-      if (dbQuestions && dbQuestions.length > 0) return dbQuestions;
-    } catch (err) {
-      console.log("[PWA] Supabase direct fetch unavailable, utilizing local questions.js repository.");
+      return JSON.parse(localStorage.getItem('gre_seen_questions') || '[]');
+    } catch (e) {
+      return [];
     }
-    return window.questions || [];
+  }
+
+  function markQuestionsAsSeen(questionsToMark) {
+    const seen = new Set(getSeenQuestionKeys());
+    questionsToMark.forEach(q => {
+      const key = String(q.id || q.text || q.question_text || '').trim();
+      if (key) seen.add(key);
+    });
+    localStorage.setItem('gre_seen_questions', JSON.stringify(Array.from(seen)));
+  }
+
+  function clearSeenQuestionHistory() {
+    localStorage.removeItem('gre_seen_questions');
+  }
+
+  async function fetchQuestionBank() {
+    let localBank = window.questions || [];
+    let dbBank = [];
+
+    try {
+      dbBank = await fetchSourceQuestionsDirect();
+    } catch (err) {
+      console.log("[PWA] Supabase direct fetch unavailable, utilizing local questions repository.");
+    }
+
+    if (!dbBank || dbBank.length === 0) {
+      return localBank;
+    }
+
+    // Combine Supabase DB questions and local questions repository without duplicates
+    const combined = [...dbBank];
+    const existingTexts = new Set(dbBank.map(q => (q.question_text || q.text || '').trim()));
+
+    localBank.forEach(q => {
+      const qText = (q.question_text || q.text || '').trim();
+      if (qText && !existingTexts.has(qText)) {
+        existingTexts.add(qText);
+        combined.push(q);
+      }
+    });
+
+    return combined;
+  }
+
+  async function updateQuestionProgressUI(totalCount) {
+    const progressEl = document.getElementById('questionProgressText');
+    if (!progressEl) return;
+    const seenKeys = new Set(getSeenQuestionKeys());
+    progressEl.textContent = `${seenKeys.size} / ${totalCount} seen`;
   }
 
   async function initQuizSession() {
     const rawBank = await fetchQuestionBank();
-    let pool = shuffleArray([...rawBank]);
+    const seenKeys = new Set(getSeenQuestionKeys());
+
+    // Separate bank into unseen and seen question pools
+    const unseenPool = rawBank.filter(q => {
+      const key = String(q.id || q.text || q.question_text || '').trim();
+      return !seenKeys.has(key);
+    });
+    const seenPool = rawBank.filter(q => {
+      const key = String(q.id || q.text || q.question_text || '').trim();
+      return seenKeys.has(key);
+    });
 
     let targetCount = 5;
     let timeSeconds = 8 * 60; // 8 mins for 5 Qs
@@ -334,7 +395,26 @@ Golden Rule: ${question.rule_takeaway}`;
       sectionBadge.textContent = "Section 1";
     }
 
-    const selectedPool = pool.slice(0, Math.min(targetCount, pool.length));
+    let selectedPool = [];
+    const shuffledUnseen = shuffleArray(unseenPool);
+    const shuffledSeen = shuffleArray(seenPool);
+
+    if (shuffledUnseen.length >= targetCount) {
+      selectedPool = shuffledUnseen.slice(0, targetCount);
+    } else if (shuffledUnseen.length > 0) {
+      // Use all remaining unseen questions, top up from seen questions
+      const neededFromSeen = targetCount - shuffledUnseen.length;
+      selectedPool = [...shuffledUnseen, ...shuffledSeen.slice(0, neededFromSeen)];
+    } else {
+      // All questions in the bank have been seen! Clear history to start a fresh cycle
+      clearSeenQuestionHistory();
+      const freshPool = shuffleArray(rawBank);
+      selectedPool = freshPool.slice(0, Math.min(targetCount, freshPool.length));
+    }
+
+    // Mark the selected questions as seen
+    markQuestionsAsSeen(selectedPool);
+    updateQuestionProgressUI(rawBank.length);
 
     // If AI Variations is toggled, call Gemini API directly from browser
     if (enableAiVariations) {
@@ -791,9 +871,22 @@ Golden Rule: ${question.rule_takeaway}`;
   });
 
   // Mode Selection Modal
-  modeSelectBtn.addEventListener('click', () => {
+  const resetSeenHistoryBtn = document.getElementById('resetSeenHistoryBtn');
+
+  modeSelectBtn.addEventListener('click', async () => {
+    const rawBank = await fetchQuestionBank();
+    updateQuestionProgressUI(rawBank.length);
     modeModal.style.display = 'flex';
   });
+
+  if (resetSeenHistoryBtn) {
+    resetSeenHistoryBtn.addEventListener('click', async () => {
+      clearSeenQuestionHistory();
+      const rawBank = await fetchQuestionBank();
+      updateQuestionProgressUI(rawBank.length);
+      showToast('🔄 Question rotation history reset!');
+    });
+  }
 
   closeModeModalBtn.addEventListener('click', () => {
     modeModal.style.display = 'none';
