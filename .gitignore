@@ -1,0 +1,13 @@
+# Environment files containing sensitive keys
+.env
+backend/.env
+
+# Python cache & virtual environments
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# OS specific files
+.DS_Store
+Thumbs.db

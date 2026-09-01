@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- PWA & iPhone Viewport Meta Tags -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GRE Prep PWA">
+  
+  <!-- PWA Icons & Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
+  <title>GRE Quantitative Practice PWA & AI Tutor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="header-top">
+        <div class="app-title">
+          GRE Quant PWA
+          <span class="badge" id="sectionBadge">Mini-Quiz</span>
+        </div>
+
+        <div class="header-actions">
+          <button id="settingsBtn" class="btn-calc-toggle" title="API & Cloud Credentials Settings">
+            ⚙️ Settings
+          </button>
+
+          <button id="modeSelectBtn" class="btn-calc-toggle" title="Select Quiz Mode">
+            🎯 Quiz Mode
+          </button>
+          
+          <button id="ingestBtn" class="btn-calc-toggle" title="Ingest New Practice Question">
+            ➕ Ingest Question
+          </button>
+
+          <button id="calcToggleBtn" class="btn-calc-toggle" title="Toggle ETS Calculator">
+            🧮 Calc
+          </button>
+
+          <button id="reportLogToggleBtn" class="btn-calc-toggle btn-log-toggle" title="View Tutoring Log Dashboard">
+            📊 Report Log
+          </button>
+          
+          <div class="timer-box" id="timerBox" title="Quiz Timer">
+            ⏱️ <span id="timerDisplay">08:00</span>
+          </div>
+        </div>
+
+        <div class="question-counter" id="questionCounter">Question 1 of 5</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- TEST VIEW CONTAINER -->
+    <main id="testView" class="test-card">
+      <div class="question-meta">
+        <span class="type-pill" id="typePill">Single Choice</span>
+        <span class="section-label" id="sectionLabel">Quantitative Practice</span>
+        <span class="type-pill" id="variationPill" style="display: none; background: rgba(168, 85, 247, 0.2); color: #c084fc;">✨ AI Variation</span>
+      </div>
+
+      <div class="question-text" id="questionText">
+        <!-- Question text injected dynamically -->
+      </div>
+
+      <!-- OPTIONS CONTAINER (Radios / Checkboxes / Text Input) -->
+      <div id="optionsContainer">
+        <!-- Input elements rendered dynamically -->
+      </div>
+
+      <!-- FOOTER / NAV -->
+      <div class="card-footer">
+        <button id="prevBtn" class="btn btn-secondary">
+          ← Previous
+        </button>
+        <button id="nextBtn" class="btn btn-primary">
+          Next →
+        </button>
+      </div>
+
+      <!-- QUESTION PALETTE JUMP BAR -->
+      <div class="palette-container">
+        <div class="palette-title">Question Palette</div>
+        <div class="palette-grid" id="paletteGrid">
+          <!-- Palette buttons dynamically created -->
+        </div>
+      </div>
+    </main>
+
+    <!-- QUIZ MODE SELECTOR MODAL -->
+    <div id="modeModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-icon">🎯</div>
+        <div class="modal-title">Select Quiz Engine Mode</div>
+        <div class="modal-body">
+          Choose a test length optimized for your practice session:
+        </div>
+
+        <div class="mode-options-grid">
+          <button class="mode-card-btn" data-mode="mini_5">
+            <div class="mode-title">⚡ 5-Question Mobile Mini-Quiz</div>
+            <div class="mode-desc">8 Minutes | Optimized for quick iPhone practice</div>
+          </button>
+          
+          <button class="mode-card-btn" data-mode="mini_10">
+            <div class="mode-title">🎯 10-Question Targeted Mini-Quiz</div>
+            <div class="mode-desc">16 Minutes | Rapid trap detection & review</div>
+          </button>
+
+          <button class="mode-card-btn" data-mode="full_27">
+            <div class="mode-title">🚀 Full Shorter GRE Practice Test</div>
+            <div class="mode-desc">27 Questions | 47 Minutes (Section 1: 12 Qs, Section 2: 15 Qs)</div>
+          </button>
+        </div>
+
+        <div style="margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="enableAiVariationsCheck" style="width: 20px; height: 20px; accent-color: var(--primary);">
+          <label for="enableAiVariationsCheck" style="font-size: 0.9rem; color: #cbd5e1; cursor: pointer;">
+            Enable Dynamic Gemini AI Question Generator (Mutate numbers & variables)
+          </label>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+          <button id="closeModeModalBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOURCE QUESTION INGESTION MODAL -->
+    <div id="ingestModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 600px; text-align: left;">
+        <div class="modal-title">➕ Ingest New Practice Question</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          Add a source practice question to your Supabase PostgreSQL database along with trap classification metadata.
+        </p>
+
+        <form id="ingestForm" style="display: flex; flex-direction: column; gap: 12px;">
+          <input type="text" id="ingestTitle" placeholder="Question Title (e.g. Modulo Remainder Property)" required class="form-input">
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <select id="ingestCategory" class="form-input">
+              <option value="Quantitative Reasoning">Quantitative Reasoning</option>
+              <option value="Algebra">Algebra</option>
+              <option value="Geometry">Geometry</option>
+              <option value="Statistics & Data">Statistics & Data</option>
+            </select>
+            <input type="text" id="ingestSubcategory" placeholder="Subcategory (e.g. Modulo)" class="form-input">
+          </div>
+
+          <textarea id="ingestQuestionText" placeholder="Enter Question Text..." required class="form-input" style="height: 80px;"></textarea>
+
+          <label style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">Options (One per line):</label>
+          <textarea id="ingestOptions" placeholder="A: Quantity A is greater.&#10;B: Quantity B is greater.&#10;C: The two quantities are equal.&#10;D: Relationship cannot be determined." required class="form-input" style="height: 80px;"></textarea>
+
+          <input type="text" id="ingestCorrect" placeholder="Exact Correct Choice (e.g. B: Quantity B is greater.)" required class="form-input">
+
+          <input type="text" id="ingestTrapType" placeholder="Trap Type (e.g. Stopped-Short / Union Distractor)" required class="form-input">
+          <textarea id="ingestTrapDesc" placeholder="Why solvers fall into this trap..." required class="form-input" style="height: 60px;"></textarea>
+          <textarea id="ingestHack" placeholder="10-Second Tactical Hack Solution..." required class="form-input" style="height: 60px;"></textarea>
+          <input type="text" id="ingestRule" placeholder="1-Sentence Golden Rule Takeaway..." required class="form-input">
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 12px;">
+            <button type="button" id="closeIngestModalBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save to Supabase Database</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- API & CLOUD SETTINGS MODAL -->
+    <div id="settingsModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 550px; text-align: left;">
+        <div class="modal-title">⚙️ Pure Client-Side API & Cloud Config</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          This app runs 100% serverless directly from your browser! You can customize your Gemini API Key & Supabase credentials below (saved locally in your browser):
+        </p>
+
+        <form id="settingsForm" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+              Gemini API Key (Google AI Studio):
+            </label>
+            <input type="password" id="settingsGeminiKey" placeholder="Enter Gemini API Key..." class="form-input" autocomplete="off">
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+              Supabase Project URL:
+            </label>
+            <input type="text" id="settingsSupabaseUrl" placeholder="https://your-project.supabase.co" class="form-input">
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+              Supabase Anon / Publishable Key:
+            </label>
+            <input type="password" id="settingsSupabaseKey" placeholder="Enter Supabase API Key..." class="form-input" autocomplete="off">
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 0.8rem; color: #94a3b8;">
+            <div style="font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">⚡ Standalone PWA Status:</div>
+            <div>• Gemini AI Integration: <span id="geminiStatusBadge" style="color: #34d399; font-weight: 600;">Browser Direct (Active)</span></div>
+            <div>• Supabase Database: <span id="supabaseStatusBadge" style="color: #34d399; font-weight: 600;">Cloud Connected</span></div>
+            <div>• Local Offline Cache: <span style="color: #38bdf8; font-weight: 600;">PWA Ready</span></div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
+            <button type="button" id="closeSettingsModalBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Config</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SOCRATIC TUTOR MODAL -->
+    <div id="tutorModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 650px; text-align: left; height: 85vh; display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
+          <div>
+            <div class="modal-title" style="font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+              <span>🤖 Interactive Socratic AI Tutor</span>
+            </div>
+            <div id="tutorTrapBadge" class="type-pill" style="margin-top: 4px; background: rgba(239, 68, 68, 0.2); color: #f87171;">
+              Trap: Missed Question
+            </div>
+          </div>
+          <button id="closeTutorModalBtn" class="calc-close">&times;</button>
+        </div>
+
+        <!-- Chat Container -->
+        <div id="tutorChatContainer" class="tutor-chat-box" style="flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 12px;">
+          <!-- Chat messages dynamically rendered -->
+        </div>
+
+        <!-- Input Area -->
+        <div style="display: flex; gap: 10px; border-top: 1px solid var(--card-border); padding-top: 12px;">
+          <input type="text" id="tutorInput" placeholder="Ask your question or respond to tutor..." class="form-input" style="flex: 1;">
+          <button id="sendTutorBtn" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHENTIC ETS GRE FLOATING CALCULATOR -->
+    <div id="calculatorModal" class="calc-widget" style="display: none;">
+      <div class="calc-header" id="calcHeader">
+        <span>ETS GRE Calculator</span>
+        <button id="calcCloseBtn" class="calc-close" title="Close Calculator">&times;</button>
+      </div>
+      <div class="calc-display-container">
+        <input type="text" id="calcDisplay" class="calc-display" value="0" readonly>
+      </div>
+      <div class="calc-keypad">
+        <button class="calc-btn btn-func" data-action="clear">C</button>
+        <button class="calc-btn btn-func" data-action="clearEntry">CE</button>
+        <button class="calc-btn btn-func" data-action="sign">±</button>
+        <button class="calc-btn btn-func" data-action="sqrt">√</button>
+        
+        <button class="calc-btn btn-num" data-val="7">7</button>
+        <button class="calc-btn btn-num" data-val="8">8</button>
+        <button class="calc-btn btn-num" data-val="9">9</button>
+        <button class="calc-btn btn-op" data-action="div">÷</button>
+        
+        <button class="calc-btn btn-num" data-val="4">4</button>
+        <button class="calc-btn btn-num" data-val="5">5</button>
+        <button class="calc-btn btn-num" data-val="6">6</button>
+        <button class="calc-btn btn-op" data-action="mult">×</button>
+        
+        <button class="calc-btn btn-num" data-val="1">1</button>
+        <button class="calc-btn btn-num" data-val="2">2</button>
+        <button class="calc-btn btn-num" data-val="3">3</button>
+        <button class="calc-btn btn-op" data-action="sub">-</button>
+        
+        <button class="calc-btn btn-num" data-val="0">0</button>
+        <button class="calc-btn btn-num" data-val=".">.</button>
+        <button class="calc-btn btn-equals" data-action="equals">=</button>
+        <button class="calc-btn btn-op" data-action="add">+</button>
+      </div>
+      <button id="transferDisplayBtn" class="calc-transfer-btn" title="Transfer display value into Numeric Entry field">
+        Transfer Display to Input
+      </button>
+    </div>
+
+    <!-- SECTION TRANSITION MODAL -->
+    <div id="transitionModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-icon">⏳</div>
+        <div class="modal-title" id="modalTitle">Section 1 Completed</div>
+        <div class="modal-body" id="modalBody">
+          You have completed Section 1.<br><br>
+          <strong>Section 2 Parameters:</strong> 15 Questions | 26 Minutes.<br>
+          <em>Note: Once Section 2 begins, Section 1 will be locked.</em>
+        </div>
+        <button id="startSection2Btn" class="btn btn-submit" style="width: 100%; justify-content: center;">
+          Start Section 2 →
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS VIEW CONTAINER & DIAGNOSTIC REPORT EXPORTER -->
+    <section id="resultsView" class="results-screen" style="display: none;">
+      <div class="score-banner">
+        <div class="score-title">Official Practice Results</div>
+        <div class="score-value" id="scoreValue">0/5</div>
+        <div class="score-percent" id="scorePercent">0% Score</div>
+        
+        <div class="section-scores">
+          <span class="section-score-pill" id="sec1Score">Section 1: 0/5</span>
+          <span class="section-score-pill" id="sec2Score" style="display: none;">Section 2: 0/15</span>
+        </div>
+      </div>
+
+      <div class="export-container">
+        <div class="export-header">
+          <div class="export-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Diagnostic Trap & Strategy Export
+          </div>
+          <button id="copyBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Diagnostic Report
+          </button>
+        </div>
+
+        <textarea id="tutorExport" class="tutor-textarea" readonly placeholder="Your formatted diagnostic export for missed questions will appear here..."></textarea>
+
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <button id="viewLogFromResultsBtn" class="btn btn-primary">
+            📊 View Full Scrollable Tutor Log Dashboard
+          </button>
+          <button id="restartBtn" class="btn btn-secondary">
+            ↻ Start New Practice Session
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TUTORING LOG & PERFORMANCE DASHBOARD -->
+    <section id="reportLogView" class="results-screen" style="display: none;">
+      
+      <div class="score-banner" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(99, 102, 241, 0.2)); text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div class="score-title" style="color: #34d399;">Master Tutoring & Performance Report</div>
+            <h2 style="color: #fff; font-size: 1.8rem; font-weight: 800;" id="logTotalSummary">0 Practice Test Sessions Logged</h2>
+          </div>
+          <button id="returnToTestBtn" class="btn btn-primary">
+            ← Return to Practice
+          </button>
+        </div>
+
+        <div class="section-scores" style="justify-content: flex-start; margin-top: 16px;">
+          <span class="section-score-pill" id="logAvgScorePill">Average Score: 0%</span>
+          <span class="section-score-pill" id="logTotalMissedPill">Total Missed Questions: 0</span>
+        </div>
+      </div>
+
+      <!-- IMPORT EXTERNAL REPORT CONTAINER -->
+      <div class="export-container">
+        <div class="export-header">
+          <div class="export-title">
+            📥 Import External Tutor Export
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Paste any Gemini Tutoring Export text block below to log and parse its questions directly into your report dashboard:
+        </p>
+        <textarea id="importReportInput" class="tutor-textarea" style="height: 120px;" placeholder="Paste Gemini Tutoring Export text here..."></textarea>
+        
+        <div style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 12px;">
+          <button id="importReportBtn" class="btn btn-primary">
+            + Import & Log External Report
+          </button>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE TUTORING LOG CONTAINER -->
+      <div id="tutoringLogContainer" style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Log entries injected dynamically -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button id="clearLogBtn" class="btn btn-secondary" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.4);">
+          🗑️ Clear All Log History
+        </button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast">Copied to Clipboard!</div>
+
+  <!-- SCRIPTS -->
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
