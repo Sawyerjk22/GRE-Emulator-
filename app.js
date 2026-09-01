@@ -36,9 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let tutorChatHistory = [];
 
   // DOM Element Handles
+  const startView = document.getElementById('startView');
   const testView = document.getElementById('testView');
   const resultsView = document.getElementById('resultsView');
   const reportLogView = document.getElementById('reportLogView');
+
+  const startModeCards = document.querySelectorAll('.start-mode-card');
+  const startEnableAiCheck = document.getElementById('startEnableAiCheck');
+  const startBankProgressText = document.getElementById('startBankProgressText');
+  const startResetProgressBtn = document.getElementById('startResetProgressBtn');
+  const startQuizBtn = document.getElementById('startQuizBtn');
 
   const sectionBadge = document.getElementById('sectionBadge');
   const questionCounter = document.getElementById('questionCounter');
@@ -303,8 +310,28 @@ Golden Rule: ${question.rule_takeaway}`;
     }
   }
 
-  // Initial Load: Fetch questions & start mini-quiz
-  initQuizSession();
+  // Initial Load: Show Start Screen layout & load question bank progress
+  showStartScreen();
+
+  async function showStartScreen() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+
+    if (testView) testView.style.display = 'none';
+    if (resultsView) resultsView.style.display = 'none';
+    if (reportLogView) reportLogView.style.display = 'none';
+    if (startView) startView.style.display = 'flex';
+
+    sectionBadge.textContent = "Select Mode";
+    questionCounter.textContent = "Ready";
+    progressBar.style.width = '0%';
+    timerDisplay.textContent = "⏱️ Ready";
+    timerBox.style.borderColor = 'var(--border-color)';
+    timerBox.style.color = '#38bdf8';
+
+    const rawBank = await fetchQuestionBank();
+    updateQuestionProgressUI(rawBank.length);
+  }
 
   // -------------------------------------------------------------
   // SEEN QUESTION TRACKING & ROTATION ENGINE
@@ -361,10 +388,14 @@ Golden Rule: ${question.rule_takeaway}`;
   }
 
   async function updateQuestionProgressUI(totalCount) {
-    const progressEl = document.getElementById('questionProgressText');
-    if (!progressEl) return;
     const seenKeys = new Set(getSeenQuestionKeys());
-    progressEl.textContent = `${seenKeys.size} / ${totalCount} seen`;
+    const countText = `${seenKeys.size} / ${totalCount} seen`;
+
+    const modalProgressEl = document.getElementById('questionProgressText');
+    if (modalProgressEl) modalProgressEl.textContent = countText;
+
+    const startProgressEl = document.getElementById('startBankProgressText');
+    if (startProgressEl) startProgressEl.textContent = countText;
   }
 
   async function initQuizSession() {
@@ -382,16 +413,16 @@ Golden Rule: ${question.rule_takeaway}`;
     });
 
     let targetCount = 5;
-    let timeSeconds = 8 * 60; // 8 mins for 5 Qs
+    let timeSeconds = 5 * 100; // 5 Qs * 1m 40s (100s) = 500s (8m 20s)
     sectionBadge.textContent = "5-Q Mini Quiz";
 
     if (activeQuizMode === 'mini_10') {
       targetCount = 10;
-      timeSeconds = 16 * 60;
+      timeSeconds = 10 * 100; // 10 Qs * 1m 40s (100s) = 1000s (16m 40s)
       sectionBadge.textContent = "10-Q Mini Quiz";
     } else if (activeQuizMode === 'full_27') {
       targetCount = 27;
-      timeSeconds = 21 * 60; // Sec 1 timer
+      timeSeconds = 12 * 100; // Sec 1: 12 Qs * 1m 40s (100s) = 1200s (20 mins)
       sectionBadge.textContent = "Section 1";
     }
 
@@ -464,6 +495,7 @@ Golden Rule: ${question.rule_takeaway}`;
     currentIndex = 0;
     currentSection = 1;
 
+    if (startView) startView.style.display = 'none';
     resultsView.style.display = 'none';
     reportLogView.style.display = 'none';
     transitionModal.style.display = 'none';
@@ -518,7 +550,7 @@ Golden Rule: ${question.rule_takeaway}`;
     saveCurrentInput();
     if (activeQuizMode === 'full_27' && currentSection === 1) {
       modalTitle.textContent = "⏱️ Section 1 Time Expired!";
-      modalBody.innerHTML = "Time is up for Section 1. All answered questions have been saved.<br><br><strong>Next: Section 2</strong> (15 Questions | 26 Minutes).";
+      modalBody.innerHTML = "Time is up for Section 1. All answered questions have been saved.<br><br><strong>Next: Section 2</strong> (15 Questions | 25 Minutes - 1m 40s/Q).";
       transitionModal.style.display = 'flex';
     } else {
       submitQuizSession();
@@ -645,6 +677,15 @@ Golden Rule: ${question.rule_takeaway}`;
 
   nextBtn.addEventListener('click', () => {
     saveCurrentInput();
+    if (activeQuizMode === 'full_27' && currentSection === 1 && currentIndex === 11) {
+      // Section 1 complete -> Section 2 transition
+      modalTitle.textContent = "Section 1 Completed";
+      modalBody.innerHTML = "You have completed Section 1 (12 Questions).<br><br><strong>Section 2 Parameters:</strong> 15 Questions | 25 Minutes (1m 40s/Q).<br><em>Note: Once Section 2 begins, Section 1 will be locked.</em>";
+      transitionModal.style.display = 'flex';
+      clearInterval(timerInterval);
+      return;
+    }
+
     if (currentIndex < activeQuestions.length - 1) {
       currentIndex++;
       renderQuestion(currentIndex);
@@ -652,6 +693,17 @@ Golden Rule: ${question.rule_takeaway}`;
       submitQuizSession();
     }
   });
+
+  if (startSection2Btn) {
+    startSection2Btn.addEventListener('click', () => {
+      currentSection = 2;
+      transitionModal.style.display = 'none';
+      sectionBadge.textContent = "Section 2";
+      startTimer(15 * 100); // Sec 2: 15 Qs * 1m 40s (100s) = 1500s (25 mins)
+      currentIndex = 12;
+      renderQuestion(currentIndex);
+    });
+  }
 
   // Submit Quiz & Export Diagnostics
   async function submitQuizSession() {
@@ -870,13 +922,54 @@ Golden Rule: ${question.rule_takeaway}`;
     initQuizSession();
   });
 
-  // Mode Selection Modal
+  // -------------------------------------------------------------
+  // START SCREEN EVENT HANDLERS
+  // -------------------------------------------------------------
+
+  if (startModeCards && startModeCards.length > 0) {
+    startModeCards.forEach(card => {
+      card.addEventListener('click', () => {
+        startModeCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        activeQuizMode = card.dataset.mode;
+      });
+
+      card.addEventListener('dblclick', () => {
+        startModeCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        activeQuizMode = card.dataset.mode;
+        initQuizSession();
+      });
+    });
+  }
+
+  if (startEnableAiCheck) {
+    startEnableAiCheck.addEventListener('change', (e) => {
+      enableAiVariations = e.target.checked;
+      if (enableAiVariationsCheck) enableAiVariationsCheck.checked = enableAiVariations;
+    });
+  }
+
+  if (startResetProgressBtn) {
+    startResetProgressBtn.addEventListener('click', async () => {
+      clearSeenQuestionHistory();
+      const rawBank = await fetchQuestionBank();
+      updateQuestionProgressUI(rawBank.length);
+      showToast('🔄 Question rotation history reset!');
+    });
+  }
+
+  if (startQuizBtn) {
+    startQuizBtn.addEventListener('click', () => {
+      initQuizSession();
+    });
+  }
+
+  // Mode Selection Modal & Navigation
   const resetSeenHistoryBtn = document.getElementById('resetSeenHistoryBtn');
 
   modeSelectBtn.addEventListener('click', async () => {
-    const rawBank = await fetchQuestionBank();
-    updateQuestionProgressUI(rawBank.length);
-    modeModal.style.display = 'flex';
+    showStartScreen();
   });
 
   if (resetSeenHistoryBtn) {
@@ -913,6 +1006,7 @@ Golden Rule: ${question.rule_takeaway}`;
   });
 
   reportLogToggleBtn.addEventListener('click', () => {
+    if (startView) startView.style.display = 'none';
     testView.style.display = 'none';
     resultsView.style.display = 'none';
     reportLogView.style.display = 'flex';
@@ -921,7 +1015,11 @@ Golden Rule: ${question.rule_takeaway}`;
 
   returnToTestBtn.addEventListener('click', () => {
     reportLogView.style.display = 'none';
-    testView.style.display = 'flex';
+    if (activeQuestions && activeQuestions.length > 0 && timerInterval) {
+      testView.style.display = 'flex';
+    } else {
+      showStartScreen();
+    }
   });
 
   viewLogFromResultsBtn.addEventListener('click', () => {
@@ -931,7 +1029,7 @@ Golden Rule: ${question.rule_takeaway}`;
   });
 
   restartBtn.addEventListener('click', () => {
-    initQuizSession();
+    showStartScreen();
   });
 
   clearLogBtn.addEventListener('click', () => {

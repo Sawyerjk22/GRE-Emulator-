@@ -65,8 +65,81 @@
       </div>
     </header>
 
+    <!-- START SCREEN CONTAINER -->
+    <main id="startView" class="test-card start-card">
+      <div class="start-hero">
+        <div class="start-badge">🎓 ETS GRE Quantitative Prep</div>
+        <h1 class="start-title">Master the GRE Quant Section</h1>
+        <p class="start-subtitle">Select your target quiz format, configure AI variation settings, and launch your timed practice session.</p>
+      </div>
+
+      <div class="mode-section-title">1. Choose Quiz Mode</div>
+      <div class="mode-selection-grid">
+        <div class="start-mode-card selected" data-mode="mini_5">
+          <div class="mode-card-header">
+            <span class="mode-icon">⚡</span>
+            <span class="mode-tag">Mobile Mini</span>
+          </div>
+          <div class="start-mode-title">5-Question Mobile Mini-Quiz</div>
+          <div class="start-mode-meta">⏱️ 8m 20s | 5 Questions (1m 40s/Q)</div>
+          <div class="start-mode-desc">Fast-paced rapid practice optimized for phone screens and quick review.</div>
+        </div>
+
+        <div class="start-mode-card" data-mode="mini_10">
+          <div class="mode-card-header">
+            <span class="mode-icon">🎯</span>
+            <span class="mode-tag">Targeted</span>
+          </div>
+          <div class="start-mode-title">10-Question Targeted Quiz</div>
+          <div class="start-mode-meta">⏱️ 16m 40s | 10 Questions (1m 40s/Q)</div>
+          <div class="start-mode-desc">In-depth practice covering major GRE traps, algebra, geometry, and data analysis.</div>
+        </div>
+
+        <div class="start-mode-card" data-mode="full_27">
+          <div class="mode-card-header">
+            <span class="mode-icon">🚀</span>
+            <span class="mode-tag">Full Test</span>
+          </div>
+          <div class="start-mode-title">Full Shorter GRE Test</div>
+          <div class="start-mode-meta">⏱️ 45 Minutes | 27 Questions (1m 40s/Q)</div>
+          <div class="start-mode-desc">Full 2-section timed simulation (Sec 1: 12 Qs/20m, Sec 2: 15 Qs/25m).</div>
+        </div>
+      </div>
+
+      <div class="start-options-panel">
+        <div class="mode-section-title" style="margin-bottom: 12px;">2. Session Parameters & AI Engine</div>
+        
+        <div class="option-row">
+          <label class="toggle-switch">
+            <input type="checkbox" id="startEnableAiCheck">
+            <span class="toggle-slider"></span>
+          </label>
+          <div class="option-info">
+            <div class="option-title">✨ Enable Dynamic Gemini AI Question Generator</div>
+            <div class="option-desc">Mutates numbers, variables, and framing to create unique new question variations powered by Gemini 2.5 Flash.</div>
+          </div>
+        </div>
+
+        <div class="bank-progress-card">
+          <div class="bank-progress-info">
+            <span>Question Bank Progress:</span>
+            <strong id="startBankProgressText">0 / 85 seen</strong>
+          </div>
+          <button id="startResetProgressBtn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+            🔄 Reset Seen History
+          </button>
+        </div>
+      </div>
+
+      <div class="start-action-container">
+        <button id="startQuizBtn" class="btn-start-quiz">
+          <span>🚀 Start Quiz Now</span>
+        </button>
+      </div>
+    </main>
+
     <!-- TEST VIEW CONTAINER -->
-    <main id="testView" class="test-card">
+    <main id="testView" class="test-card" style="display: none;">
       <div class="question-meta">
         <span class="type-pill" id="typePill">Single Choice</span>
         <span class="section-label" id="sectionLabel">Quantitative Practice</span>
@@ -113,17 +186,17 @@
         <div class="mode-options-grid">
           <button class="mode-card-btn" data-mode="mini_5">
             <div class="mode-title">⚡ 5-Question Mobile Mini-Quiz</div>
-            <div class="mode-desc">8 Minutes | Optimized for quick iPhone practice</div>
+            <div class="mode-desc">8m 20s | 1m 40s per question</div>
           </button>
           
           <button class="mode-card-btn" data-mode="mini_10">
             <div class="mode-title">🎯 10-Question Targeted Mini-Quiz</div>
-            <div class="mode-desc">16 Minutes | Rapid trap detection & review</div>
+            <div class="mode-desc">16m 40s | Rapid trap detection & review</div>
           </button>
 
           <button class="mode-card-btn" data-mode="full_27">
             <div class="mode-title">🚀 Full Shorter GRE Practice Test</div>
-            <div class="mode-desc">27 Questions | 47 Minutes (Section 1: 12 Qs, Section 2: 15 Qs)</div>
+            <div class="mode-desc">27 Questions | 45 Minutes (Sec 1: 12 Qs / 20m, Sec 2: 15 Qs / 25m)</div>
           </button>
         </div>
 
@@ -311,7 +384,7 @@
         <div class="modal-title" id="modalTitle">Section 1 Completed</div>
         <div class="modal-body" id="modalBody">
           You have completed Section 1.<br><br>
-          <strong>Section 2 Parameters:</strong> 15 Questions | 26 Minutes.<br>
+          <strong>Section 2 Parameters:</strong> 15 Questions | 25 Minutes (1m 40s/Q).<br>
           <em>Note: Once Section 2 begins, Section 1 will be locked.</em>
         </div>
         <button id="startSection2Btn" class="btn btn-submit" style="width: 100%; justify-content: center;">
