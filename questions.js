@@ -1585,3 +1585,7 @@ const questions = [
     difficulty_rating: 3
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.questions = questions;
+}

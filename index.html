@@ -28,42 +28,26 @@
     <header class="ets-header">
       <div class="ets-header-top">
         <div class="ets-brand-group">
-          <button id="quitTestBtn" class="ets-nav-btn ets-btn-danger" title="Quit Practice Session">Quit Test</button>
-          <button id="exitSectionBtn" class="ets-nav-btn" title="Exit Section">Exit Section</button>
+          <button id="exitSectionBtn" class="ets-nav-btn ets-btn-danger" title="Exit Section / Quit">Exit Section</button>
           <div class="ets-exam-title">
             <span class="ets-main-title">GRE® General Test</span>
-            <span class="ets-section-badge" id="sectionBadge">Section 1 of 2: Quantitative Reasoning</span>
+            <span class="ets-section-badge" id="sectionBadge">Quantitative Reasoning</span>
           </div>
         </div>
 
         <div class="ets-controls-group">
-          <!-- Font Size Selector -->
-          <div class="ets-control-item" title="Adjust Question Text Size">
-            <select id="fontSizeSelect" class="ets-select-btn">
-              <option value="normal">Font: Normal</option>
-              <option value="large">Font: Large</option>
-              <option value="xlarge">Font: Extra Large</option>
-            </select>
-          </div>
-
-          <!-- Utility & App Controls -->
-          <button id="modeSelectBtn" class="ets-nav-btn ets-btn-subtle" title="Quiz Mode">🎯 Mode</button>
-          <button id="settingsBtn" class="ets-nav-btn ets-btn-subtle" title="API Credentials">⚙️ Config</button>
-          <button id="ingestBtn" class="ets-nav-btn ets-btn-subtle" title="Add Source Question">➕ Ingest</button>
-          <button id="reportLogToggleBtn" class="ets-nav-btn ets-btn-subtle" title="Tutor Log">📊 Reports</button>
-
           <!-- Core ETS Exam Action Buttons -->
           <button id="calcToggleBtn" class="ets-nav-btn ets-btn-action" title="Toggle ETS Calculator (Alt+C)">
-            🧮 Calc
-          </button>
-          <button id="helpBtn" class="ets-nav-btn ets-btn-action" title="Exam Help & Shortcuts (Alt+H)">
-            ❓ Help
+            Calc
           </button>
           <button id="markBtn" class="ets-nav-btn ets-btn-action ets-btn-mark" title="Mark Question for Review (Alt+M)">
             <span id="markCheckbox" class="ets-mark-icon"></span> Mark
           </button>
           <button id="reviewBtn" class="ets-nav-btn ets-btn-action" title="Section Review Screen (Alt+R)">
-            📋 Review
+            Review
+          </button>
+          <button id="helpBtn" class="ets-nav-btn ets-btn-action" title="Exam Help & Shortcuts (Alt+H)">
+            Help
           </button>
 
           <!-- Timer Container -->
@@ -72,8 +56,8 @@
             <span id="timerDisplay">00:20:00</span>
           </div>
 
-          <!-- Primary Navigation Buttons -->
-          <div class="ets-nav-buttons">
+          <!-- Primary Navigation Buttons (Desktop) -->
+          <div class="ets-nav-buttons desktop-only-nav">
             <button id="prevBtn" class="ets-nav-btn ets-btn-nav ets-btn-back" title="Previous Question (Alt+B)">
               ← Back
             </button>
@@ -81,6 +65,31 @@
               Next →
             </button>
           </div>
+
+          <!-- Clean Tools & Settings Dropdown Menu -->
+          <div class="tools-dropdown-wrapper">
+            <button id="toolsMenuBtn" class="ets-nav-btn ets-btn-subtle" title="App Tools & Settings">
+              Tools ⚙️
+            </button>
+            <div id="toolsDropdown" class="tools-dropdown-menu" style="display: none;">
+              <div class="tools-dropdown-item">
+                <label for="fontSizeSelect">Font Size:</label>
+                <select id="fontSizeSelect" class="ets-select-btn">
+                  <option value="normal">Normal</option>
+                  <option value="large">Large</option>
+                  <option value="xlarge">Extra Large</option>
+                </select>
+              </div>
+              <div class="tools-dropdown-divider"></div>
+              <button id="modeSelectBtn" class="tools-dropdown-btn">🎯 Quiz Modes</button>
+              <button id="reportLogToggleBtn" class="tools-dropdown-btn">📊 Performance & Tutor Reports</button>
+              <button id="settingsBtn" class="tools-dropdown-btn">🔑 API & Cloud Credentials</button>
+              <button id="ingestBtn" class="tools-dropdown-btn">➕ Ingest New Question</button>
+              <div class="tools-dropdown-divider"></div>
+              <button id="quitTestBtn" class="tools-dropdown-btn ets-text-danger">🚪 Quit Current Session</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -100,7 +109,7 @@
     <!-- START SCREEN CONTAINER -->
     <main id="startView" class="test-card start-card ets-canvas">
       <div class="start-hero">
-        <div class="start-badge">🎓 Official ETS GRE Quantitative Practice</div>
+        <div class="start-badge">Official ETS GRE Quantitative Practice</div>
         <h1 class="start-title">GRE® Quantitative Reasoning Simulator</h1>
         <p class="start-subtitle">Authentic ETS online exam software interface, timed sections, side-by-side Quantitative Comparison layout, and Socratic AI tutoring.</p>
       </div>
@@ -109,31 +118,28 @@
       <div class="mode-selection-grid">
         <div class="start-mode-card selected" data-mode="mini_5">
           <div class="mode-card-header">
-            <span class="mode-icon">⚡</span>
             <span class="mode-tag">Rapid Mini</span>
           </div>
           <div class="start-mode-title">5-Question Warm-Up Quiz</div>
-          <div class="start-mode-meta">⏱️ 8m 20s | 5 Questions (1m 40s/Q)</div>
+          <div class="start-mode-meta">8m 20s | 5 Questions (1m 40s/Q)</div>
           <div class="start-mode-desc">Fast desktop warm-up covering essential GRE quant concepts.</div>
         </div>
 
         <div class="start-mode-card" data-mode="mini_10">
           <div class="mode-card-header">
-            <span class="mode-icon">🎯</span>
             <span class="mode-tag">Targeted</span>
           </div>
           <div class="start-mode-title">10-Question Targeted Quiz</div>
-          <div class="start-mode-meta">⏱️ 16m 40s | 10 Questions (1m 40s/Q)</div>
+          <div class="start-mode-meta">16m 40s | 10 Questions (1m 40s/Q)</div>
           <div class="start-mode-desc">Focused practice on major GRE traps, algebra, geometry, and data interpretation.</div>
         </div>
 
         <div class="start-mode-card" data-mode="full_27">
           <div class="mode-card-header">
-            <span class="mode-icon">🚀</span>
             <span class="mode-tag">Official Test</span>
           </div>
           <div class="start-mode-title">Full Shorter GRE Test</div>
-          <div class="start-mode-meta">⏱️ 45 Minutes | 27 Questions (1m 40s/Q)</div>
+          <div class="start-mode-meta">45 Minutes | 27 Questions (1m 40s/Q)</div>
           <div class="start-mode-desc">Full 2-section timed simulation (Sec 1: 12 Qs/20m, Sec 2: 15 Qs/25m).</div>
         </div>
       </div>
@@ -147,7 +153,7 @@
             <span class="toggle-slider"></span>
           </label>
           <div class="option-info">
-            <div class="option-title">✨ Dynamic Gemini AI Question Generator</div>
+            <div class="option-title">Dynamic Gemini AI Question Generator</div>
             <div class="option-desc">Mutates numbers, variables, and framing to produce brand new ETS-style question variations powered by Gemini 2.5 Flash.</div>
           </div>
         </div>
@@ -158,14 +164,14 @@
             <strong id="startBankProgressText">0 / 85 seen</strong>
           </div>
           <button id="startResetProgressBtn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
-            🔄 Reset Seen History
+            Reset Seen History
           </button>
         </div>
       </div>
 
       <div class="start-action-container">
         <button id="startQuizBtn" class="btn-start-quiz">
-          <span>🚀 Begin Timed GRE Exam</span>
+          <span>Begin Timed GRE Exam</span>
         </button>
       </div>
     </main>
@@ -174,7 +180,7 @@
     <main id="testView" class="test-card ets-canvas font-size-normal" style="display: none;">
       <div class="ets-question-meta">
         <span class="type-pill" id="typePill">Quantitative Comparison</span>
-        <span class="type-pill" id="variationPill" style="display: none; background: rgba(168, 85, 247, 0.2); color: #c084fc;">✨ AI Variation</span>
+        <span class="type-pill" id="variationPill" style="display: none;">AI Variation</span>
       </div>
 
       <!-- QUESTION TEXT & SIDE-BY-SIDE CONTAINER -->
@@ -196,12 +202,27 @@
           <!-- Palette buttons created dynamically -->
         </div>
       </div>
+
+      <!-- MOBILE STICKY BOTTOM ACTION BAR -->
+      <div class="mobile-bottom-nav" id="mobileBottomNav">
+        <button id="mobilePrevBtn" class="mobile-nav-btn mobile-btn-back">
+          ← Back
+        </button>
+        <button id="mobileMarkBtn" class="mobile-nav-btn mobile-btn-mark">
+          Mark 🚩
+        </button>
+        <button id="mobileCalcBtn" class="mobile-nav-btn mobile-btn-calc">
+          Calc 🧮
+        </button>
+        <button id="mobileNextBtn" class="mobile-nav-btn mobile-btn-next">
+          Next →
+        </button>
+      </div>
     </main>
 
     <!-- QUIZ MODE SELECTOR MODAL -->
     <div id="modeModal" class="modal-overlay" style="display: none;">
       <div class="modal-card">
-        <div class="modal-icon">🎯</div>
         <div class="modal-title">Select Quiz Engine Mode</div>
         <div class="modal-body">
           Choose a test length optimized for your practice session:
@@ -209,17 +230,17 @@
 
         <div class="mode-options-grid">
           <button class="mode-card-btn" data-mode="mini_5">
-            <div class="mode-title">⚡ 5-Question Mobile Mini-Quiz</div>
+            <div class="mode-title">5-Question Mini-Quiz</div>
             <div class="mode-desc">8m 20s | 1m 40s per question</div>
           </button>
           
           <button class="mode-card-btn" data-mode="mini_10">
-            <div class="mode-title">🎯 10-Question Targeted Mini-Quiz</div>
+            <div class="mode-title">10-Question Targeted Mini-Quiz</div>
             <div class="mode-desc">16m 40s | Rapid trap detection & review</div>
           </button>
 
           <button class="mode-card-btn" data-mode="full_27">
-            <div class="mode-title">🚀 Full Shorter GRE Practice Test</div>
+            <div class="mode-title">Full Shorter GRE Practice Test</div>
             <div class="mode-desc">27 Questions | 45 Minutes (Sec 1: 12 Qs / 20m, Sec 2: 15 Qs / 25m)</div>
           </button>
         </div>
@@ -234,10 +255,10 @@
         <div style="margin-top: 14px; padding: 10px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
           <div style="font-size: 0.85rem; color: #cbd5e1;">
             <span>Question Bank Progress:</span>
-            <span id="questionProgressText" style="color: #38bdf8; font-weight: 700; margin-left: 6px;">0 / 85 seen</span>
+            <span id="questionProgressText" style="color: #0056b3; font-weight: 700; margin-left: 6px;">0 / 85 seen</span>
           </div>
           <button id="resetSeenHistoryBtn" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem; min-height: 32px;">
-            🔄 Reset Question Progress
+            Reset Question Progress
           </button>
         </div>
 
@@ -251,7 +272,7 @@
     <div id="reviewModal" class="modal-overlay" style="display: none;">
       <div class="modal-card ets-modal-card">
         <div class="ets-modal-header">
-          <div class="modal-title">📋 Section Review — Quantitative Reasoning</div>
+          <div class="modal-title">Section Review — Quantitative Reasoning</div>
           <button id="closeReviewModalBtn" class="calc-close">&times;</button>
         </div>
         <p class="ets-modal-instructions">
@@ -282,12 +303,12 @@
     <div id="etsHelpModal" class="modal-overlay" style="display: none;">
       <div class="modal-card ets-modal-card" style="max-width: 700px; text-align: left;">
         <div class="ets-modal-header">
-          <div class="modal-title">❓ GRE® Quantitative Reasoning Exam Help</div>
+          <div class="modal-title">GRE® Quantitative Reasoning Exam Help</div>
           <button id="closeHelpModalBtn" class="calc-close">&times;</button>
         </div>
         <div class="ets-help-body">
           <div class="ets-help-section">
-            <h4>⌨️ Desktop Keyboard Shortcuts:</h4>
+            <h4>Desktop Keyboard Shortcuts:</h4>
             <div class="ets-shortcut-grid">
               <div class="ets-shortcut-item"><code>Alt + N</code> <span>Next Question</span></div>
               <div class="ets-shortcut-item"><code>Alt + B</code> <span>Previous Question</span></div>
@@ -299,7 +320,7 @@
             </div>
           </div>
           <div class="ets-help-section" style="margin-top: 16px;">
-            <h4>📐 Question Format Rules:</h4>
+            <h4>Question Format Rules:</h4>
             <ul>
               <li><strong>Quantitative Comparison:</strong> Compare Quantity A and Quantity B. Select A, B, C, or D.</li>
               <li><strong>Multiple Choice (Single Answer):</strong> Oval radio buttons. Click to select your choice.</li>
@@ -317,7 +338,7 @@
     <!-- SOURCE QUESTION INGESTION MODAL -->
     <div id="ingestModal" class="modal-overlay" style="display: none;">
       <div class="modal-card" style="max-width: 600px; text-align: left;">
-        <div class="modal-title">➕ Ingest New Practice Question</div>
+        <div class="modal-title">Ingest New Practice Question</div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
           Add a source practice question to your Supabase PostgreSQL database along with trap classification metadata.
         </p>
@@ -337,7 +358,7 @@
 
           <textarea id="ingestQuestionText" placeholder="Enter Question Text..." required class="form-input" style="height: 80px;"></textarea>
 
-          <label style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">Options (One per line):</label>
+          <label style="font-size: 0.8rem; color: #595959; font-weight: 600;">Options (One per line):</label>
           <textarea id="ingestOptions" placeholder="A: Quantity A is greater.&#10;B: Quantity B is greater.&#10;C: The two quantities are equal.&#10;D: Relationship cannot be determined." required class="form-input" style="height: 80px;"></textarea>
 
           <input type="text" id="ingestCorrect" placeholder="Exact Correct Choice (e.g. B: Quantity B is greater.)" required class="form-input">
@@ -358,38 +379,38 @@
     <!-- API & CLOUD SETTINGS MODAL -->
     <div id="settingsModal" class="modal-overlay" style="display: none;">
       <div class="modal-card" style="max-width: 550px; text-align: left;">
-        <div class="modal-title">⚙️ Pure Client-Side API & Cloud Config</div>
+        <div class="modal-title">Pure Client-Side API & Cloud Config</div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
           This app runs 100% serverless directly from your browser! You can customize your Gemini API Key & Supabase credentials below (saved locally in your browser):
         </p>
 
         <form id="settingsForm" style="display: flex; flex-direction: column; gap: 14px;">
           <div>
-            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+            <label style="font-size: 0.8rem; color: #1a1a1a; font-weight: 600; display: block; margin-bottom: 4px;">
               Gemini API Key (Google AI Studio):
             </label>
             <input type="password" id="settingsGeminiKey" placeholder="Enter Gemini API Key..." class="form-input" autocomplete="off">
           </div>
 
           <div>
-            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+            <label style="font-size: 0.8rem; color: #1a1a1a; font-weight: 600; display: block; margin-bottom: 4px;">
               Supabase Project URL:
             </label>
             <input type="text" id="settingsSupabaseUrl" placeholder="https://your-project.supabase.co" class="form-input">
           </div>
 
           <div>
-            <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 600; display: block; margin-bottom: 4px;">
+            <label style="font-size: 0.8rem; color: #1a1a1a; font-weight: 600; display: block; margin-bottom: 4px;">
               Supabase Anon / Publishable Key:
             </label>
             <input type="password" id="settingsSupabaseKey" placeholder="Enter Supabase API Key..." class="form-input" autocomplete="off">
           </div>
 
-          <div style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 0.8rem; color: #94a3b8;">
-            <div style="font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">⚡ Standalone PWA Status:</div>
-            <div>• Gemini AI Integration: <span id="geminiStatusBadge" style="color: #34d399; font-weight: 600;">Browser Direct (Active)</span></div>
-            <div>• Supabase Database: <span id="supabaseStatusBadge" style="color: #34d399; font-weight: 600;">Cloud Connected</span></div>
-            <div>• Local Offline Cache: <span style="color: #38bdf8; font-weight: 600;">PWA Ready</span></div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--card-border); font-size: 0.8rem; color: #595959;">
+            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">Standalone PWA Status:</div>
+            <div>• Gemini AI Integration: <span id="geminiStatusBadge" style="color: #059669; font-weight: 600;">Browser Direct (Active)</span></div>
+            <div>• Supabase Database: <span id="supabaseStatusBadge" style="color: #059669; font-weight: 600;">Cloud Connected</span></div>
+            <div>• Local Offline Cache: <span style="color: #0056b3; font-weight: 600;">PWA Ready</span></div>
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
@@ -406,9 +427,9 @@
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
           <div>
             <div class="modal-title" style="font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-              <span>🤖 Interactive Socratic AI Tutor</span>
+              <span>Interactive Socratic AI Tutor</span>
             </div>
-            <div id="tutorTrapBadge" class="type-pill" style="margin-top: 4px; background: rgba(239, 68, 68, 0.2); color: #f87171;">
+            <div id="tutorTrapBadge" class="type-pill" style="margin-top: 4px; background: #fee2e2; color: #991b1b;">
               Trap: Missed Question
             </div>
           </div>
@@ -471,7 +492,6 @@
     <!-- SECTION TRANSITION MODAL -->
     <div id="transitionModal" class="modal-overlay" style="display: none;">
       <div class="modal-card">
-        <div class="modal-icon">⏳</div>
         <div class="modal-title" id="modalTitle">Section 1 Completed</div>
         <div class="modal-body" id="modalBody">
           You have completed Section 1.<br><br>
@@ -500,11 +520,9 @@
       <div class="export-container">
         <div class="export-header">
           <div class="export-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             Diagnostic Trap & Strategy Export
           </div>
           <button id="copyBtn" class="btn btn-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             Copy Diagnostic Report
           </button>
         </div>
@@ -513,10 +531,10 @@
 
         <div style="margin-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
           <button id="viewLogFromResultsBtn" class="btn btn-primary">
-            📊 View Full Scrollable Tutor Log Dashboard
+            View Full Tutor Log Dashboard
           </button>
           <button id="restartBtn" class="btn btn-secondary">
-            ↻ Start New Practice Session
+            Start New Practice Session
           </button>
         </div>
       </div>
@@ -525,11 +543,11 @@
     <!-- TUTORING LOG & PERFORMANCE DASHBOARD -->
     <section id="reportLogView" class="results-screen" style="display: none;">
       
-      <div class="score-banner" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(99, 102, 241, 0.2)); text-align: left;">
+      <div class="score-banner" style="background: #f8fafc; text-align: left; border: 1px solid #cbd5e1;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
-            <div class="score-title" style="color: #34d399;">Master Tutoring & Performance Report</div>
-            <h2 style="color: #fff; font-size: 1.8rem; font-weight: 800;" id="logTotalSummary">0 Practice Test Sessions Logged</h2>
+            <div class="score-title" style="color: #0f2b5c;">Master Tutoring & Performance Report</div>
+            <h2 style="color: #1a1a1a; font-size: 1.8rem; font-weight: 800;" id="logTotalSummary">0 Practice Test Sessions Logged</h2>
           </div>
           <button id="returnToTestBtn" class="btn btn-primary">
             ← Return to Practice
@@ -546,7 +564,7 @@
       <div class="export-container">
         <div class="export-header">
           <div class="export-title">
-            📥 Import External Tutor Export
+            Import External Tutor Export
           </div>
         </div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
@@ -567,8 +585,8 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-        <button id="clearLogBtn" class="btn btn-secondary" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.4);">
-          🗑️ Clear All Log History
+        <button id="clearLogBtn" class="btn btn-secondary" style="color: #b91c1c; border-color: #f87171;">
+          Clear All Log History
         </button>
       </div>
 

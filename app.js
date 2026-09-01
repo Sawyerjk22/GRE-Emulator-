@@ -85,6 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeHelpModalBtn = document.getElementById('closeHelpModalBtn');
   const closeHelpModalBtn2 = document.getElementById('closeHelpModalBtn2');
   const timerToggleBtn = document.getElementById('timerToggleBtn');
+  const toolsMenuBtn = document.getElementById('toolsMenuBtn');
+  const toolsDropdown = document.getElementById('toolsDropdown');
+
+  // Mobile Bottom Bar Handles
+  const mobilePrevBtn = document.getElementById('mobilePrevBtn');
+  const mobileNextBtn = document.getElementById('mobileNextBtn');
+  const mobileMarkBtn = document.getElementById('mobileMarkBtn');
+  const mobileCalcBtn = document.getElementById('mobileCalcBtn');
 
   // Modal Handles
   const settingsBtn = document.getElementById('settingsBtn');
@@ -350,9 +358,9 @@ Golden Rule: ${question.rule_takeaway}`;
     sectionBadge.textContent = "Select Mode";
     questionCounter.textContent = "Ready";
     progressBar.style.width = '0%';
-    timerDisplay.textContent = "⏱️ Ready";
+    timerDisplay.textContent = "Ready";
     timerBox.style.borderColor = 'var(--border-color)';
-    timerBox.style.color = '#38bdf8';
+    timerBox.style.color = '#ffffff';
 
     const rawBank = await fetchQuestionBank();
     updateQuestionProgressUI(rawBank.length);
@@ -384,7 +392,7 @@ Golden Rule: ${question.rule_takeaway}`;
   }
 
   async function fetchQuestionBank() {
-    let localBank = window.questions || [];
+    let localBank = (typeof window !== 'undefined' && window.questions) ? window.questions : (typeof questions !== 'undefined' ? questions : []);
     let dbBank = [];
 
     try {
@@ -474,7 +482,7 @@ Golden Rule: ${question.rule_takeaway}`;
 
     // If AI Variations is toggled, call Gemini API directly from browser
     if (enableAiVariations) {
-      showToast("✨ Generating AI Question Variations with Gemini API...");
+      showToast("Generating AI Question Variations with Gemini API...");
       activeQuestions = await Promise.all(selectedPool.map(async (q, idx) => {
         try {
           const varData = await generateVariationDirect(q);
@@ -575,7 +583,7 @@ Golden Rule: ${question.rule_takeaway}`;
   function handleTimeExpired() {
     saveCurrentInput();
     if (activeQuizMode === 'full_27' && currentSection === 1) {
-      modalTitle.textContent = "⏱️ Section 1 Time Expired!";
+      modalTitle.textContent = "Section 1 Time Expired!";
       modalBody.innerHTML = "Time is up for Section 1. All answered questions have been saved.<br><br><strong>Next: Section 2</strong> (15 Questions | 25 Minutes - 1m 40s/Q).";
       transitionModal.style.display = 'flex';
     } else {
@@ -632,6 +640,15 @@ Golden Rule: ${question.rule_takeaway}`;
         markBtn.classList.add('marked');
       } else {
         markBtn.classList.remove('marked');
+      }
+    }
+    if (mobileMarkBtn) {
+      if (isMarked) {
+        mobileMarkBtn.classList.add('marked');
+        mobileMarkBtn.textContent = 'Marked 🚩';
+      } else {
+        mobileMarkBtn.classList.remove('marked');
+        mobileMarkBtn.textContent = 'Mark 🚩';
       }
     }
     if (markStatusLabel) {
@@ -779,12 +796,19 @@ Golden Rule: ${question.rule_takeaway}`;
     prevBtn.disabled = index === 0;
     prevBtn.style.opacity = index === 0 ? '0.5' : '1';
 
+    if (mobilePrevBtn) {
+      mobilePrevBtn.disabled = index === 0;
+      mobilePrevBtn.style.opacity = index === 0 ? '0.5' : '1';
+    }
+
     if (index === activeQuestions.length - 1) {
       nextBtn.textContent = 'Submit Session ✓';
       nextBtn.className = 'ets-nav-btn ets-btn-nav ets-btn-next';
+      if (mobileNextBtn) mobileNextBtn.textContent = 'Submit ✓';
     } else {
       nextBtn.textContent = 'Next →';
       nextBtn.className = 'ets-nav-btn ets-btn-nav ets-btn-next';
+      if (mobileNextBtn) mobileNextBtn.textContent = 'Next →';
     }
 
     updateMarkUI();
@@ -876,6 +900,42 @@ Golden Rule: ${question.rule_takeaway}`;
       timerDisplay.style.visibility = isTimerHidden ? 'hidden' : 'visible';
     });
   }
+
+  // Tools Menu Dropdown Logic
+  if (toolsMenuBtn && toolsDropdown) {
+    toolsMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = toolsDropdown.style.display === 'flex';
+      toolsDropdown.style.display = isVisible ? 'none' : 'flex';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (toolsDropdown && !toolsDropdown.contains(e.target) && e.target !== toolsMenuBtn) {
+        toolsDropdown.style.display = 'none';
+      }
+    });
+
+    toolsDropdown.addEventListener('click', () => {
+      toolsDropdown.style.display = 'none';
+    });
+  }
+
+  // Mobile Bottom Bar Navigation Actions
+  if (mobilePrevBtn) {
+    mobilePrevBtn.addEventListener('click', () => prevBtn.click());
+  }
+  if (mobileNextBtn) {
+    mobileNextBtn.addEventListener('click', () => nextBtn.click());
+  }
+  if (mobileMarkBtn) {
+    mobileMarkBtn.addEventListener('click', () => toggleMarkCurrentQuestion());
+  }
+  if (mobileCalcBtn) {
+    mobileCalcBtn.addEventListener('click', () => {
+      if (calcToggleBtn) calcToggleBtn.click();
+    });
+  }
+
 
   // Desktop Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
@@ -1086,7 +1146,7 @@ Golden Rule: ${question.rule_takeaway}`;
     if (sKey) localStorage.setItem('gre_supabase_key', sKey);
     else localStorage.removeItem('gre_supabase_key');
 
-    showToast("✓ Settings & API Credentials Saved!");
+    showToast("Settings & API Credentials Saved!");
     settingsModal.style.display = 'none';
     initQuizSession();
   });
@@ -1123,7 +1183,7 @@ Golden Rule: ${question.rule_takeaway}`;
     try {
       const ok = await insertSourceQuestionDirect(payload);
       if (ok) {
-        showToast("✓ Practice Question saved to Supabase Database!");
+        showToast("Practice Question saved to Supabase Database!");
       } else {
         showToast("Saved question locally (Supabase unconfigured or offline).");
       }
@@ -1169,7 +1229,7 @@ Golden Rule: ${question.rule_takeaway}`;
       clearSeenQuestionHistory();
       const rawBank = await fetchQuestionBank();
       updateQuestionProgressUI(rawBank.length);
-      showToast('🔄 Question rotation history reset!');
+      showToast('Question rotation history reset!');
     });
   }
 
@@ -1191,7 +1251,7 @@ Golden Rule: ${question.rule_takeaway}`;
       clearSeenQuestionHistory();
       const rawBank = await fetchQuestionBank();
       updateQuestionProgressUI(rawBank.length);
-      showToast('🔄 Question rotation history reset!');
+      showToast('Question rotation history reset!');
     });
   }
 
@@ -1281,13 +1341,13 @@ Golden Rule: ${question.rule_takeaway}`;
       let missedHTML = '';
       missed.forEach((m, mIdx) => {
         missedHTML += `
-          <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-top: 10px;">
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px; margin-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 700; color: #f87171;">Question #${mIdx + 1}: ${escapeHtml(m.trap_type || 'Trap')}</span>
-              <button class="btn btn-secondary launch-tutor-btn" style="padding: 4px 10px; font-size: 0.75rem; min-height: 32px;" data-idx="${mIdx}">💬 Chat with Socratic Tutor</button>
+              <span style="font-weight: 700; color: #b91c1c;">Question #${mIdx + 1}: ${escapeHtml(m.trap_type || 'Trap')}</span>
+              <button class="btn btn-secondary launch-tutor-btn" style="padding: 4px 10px; font-size: 0.75rem; min-height: 32px;" data-idx="${mIdx}">Chat with Socratic Tutor</button>
             </div>
-            <div style="font-size: 0.88rem; margin: 8px 0; color: #cbd5e1;">${formatQuestionText(m.question_text || '')}</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">
+            <div style="font-size: 0.88rem; margin: 8px 0; color: #1a1a1a;">${formatQuestionText(m.question_text || '')}</div>
+            <div style="font-size: 0.8rem; color: #595959;">
               <strong>Your Answer:</strong> ${escapeHtml(m.user_answer || '')} | <strong>Correct Answer:</strong> ${escapeHtml(m.correct_answer || '')}
             </div>
           </div>
@@ -1296,7 +1356,7 @@ Golden Rule: ${question.rule_takeaway}`;
 
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 700; color: #fff;">Session #${history.length - idx}: ${session.totalScore}/${session.totalQuestions} (${Math.round((session.totalScore / session.totalQuestions) * 100)}%)</div>
+          <div style="font-weight: 700; color: #0f2b5c;">Session #${history.length - idx}: ${session.totalScore}/${session.totalQuestions} (${Math.round((session.totalScore / session.totalQuestions) * 100)}%)</div>
           <div style="font-size: 0.8rem; color: var(--text-muted);">${session.date}</div>
         </div>
         <div>${missedHTML}</div>
