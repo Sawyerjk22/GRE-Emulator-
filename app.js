@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeTutorQuestion = null;
   let tutorChatHistory = [];
 
+  // Authentic ETS State Additions
+  let markedQuestions = new Set();
+  let fontSize = 'normal';
+  let isTimerHidden = false;
+  let selectedReviewRowIndex = null;
+
   // DOM Element Handles
   const startView = document.getElementById('startView');
   const testView = document.getElementById('testView');
@@ -60,6 +66,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const paletteGrid = document.getElementById('paletteGrid');
+
+  // Authentic ETS Top Toolbar & Control Handles
+  const quitTestBtn = document.getElementById('quitTestBtn');
+  const exitSectionBtn = document.getElementById('exitSectionBtn');
+  const fontSizeSelect = document.getElementById('fontSizeSelect');
+  const markBtn = document.getElementById('markBtn');
+  const markCheckbox = document.getElementById('markCheckbox');
+  const markStatusLabel = document.getElementById('markStatusLabel');
+  const reviewBtn = document.getElementById('reviewBtn');
+  const reviewModal = document.getElementById('reviewModal');
+  const closeReviewModalBtn = document.getElementById('closeReviewModalBtn');
+  const returnToTestFromReviewBtn = document.getElementById('returnToTestFromReviewBtn');
+  const reviewTableBody = document.getElementById('reviewTableBody');
+  const goToQuestionBtn = document.getElementById('goToQuestionBtn');
+  const helpBtn = document.getElementById('helpBtn');
+  const etsHelpModal = document.getElementById('etsHelpModal');
+  const closeHelpModalBtn = document.getElementById('closeHelpModalBtn');
+  const closeHelpModalBtn2 = document.getElementById('closeHelpModalBtn2');
+  const timerToggleBtn = document.getElementById('timerToggleBtn');
 
   // Modal Handles
   const settingsBtn = document.getElementById('settingsBtn');
@@ -492,6 +517,7 @@ Golden Rule: ${question.rule_takeaway}`;
     }
 
     userAnswers = new Array(activeQuestions.length).fill(null);
+    markedQuestions.clear();
     currentIndex = 0;
     currentSection = 1;
 
@@ -539,9 +565,9 @@ Golden Rule: ${question.rule_takeaway}`;
 
     if (secondsRemaining <= 120) {
       timerBox.style.borderColor = 'var(--danger)';
-      timerBox.style.color = 'var(--danger)';
+      timerBox.style.color = '#f87171';
     } else {
-      timerBox.style.borderColor = 'var(--border-color)';
+      timerBox.style.borderColor = '#1e3a8a';
       timerBox.style.color = '#38bdf8';
     }
   }
@@ -557,7 +583,7 @@ Golden Rule: ${question.rule_takeaway}`;
     }
   }
 
-  // Palette Jump Bar
+  // Palette Jump Bar & Status
   function initPalette() {
     paletteGrid.innerHTML = '';
     activeQuestions.forEach((q, idx) => {
@@ -576,15 +602,77 @@ Golden Rule: ${question.rule_takeaway}`;
   function updatePaletteUI() {
     const buttons = paletteGrid.querySelectorAll('.palette-btn');
     buttons.forEach((btn, idx) => {
-      btn.classList.remove('active', 'answered');
+      btn.classList.remove('active', 'answered', 'marked');
       if (idx === currentIndex) btn.classList.add('active');
-      if (userAnswers[idx] !== null && userAnswers[idx] !== '') {
+      if (userAnswers[idx] !== null && userAnswers[idx] !== undefined && String(userAnswers[idx]).trim() !== '') {
         btn.classList.add('answered');
+      }
+      if (markedQuestions.has(idx)) {
+        btn.classList.add('marked');
       }
     });
   }
 
-  // Question Rendering Engine
+  function toggleMarkCurrentQuestion() {
+    if (markedQuestions.has(currentIndex)) {
+      markedQuestions.delete(currentIndex);
+      showToast(`Unmarked Question ${currentIndex + 1}`);
+    } else {
+      markedQuestions.add(currentIndex);
+      showToast(`Marked Question ${currentIndex + 1} for review`);
+    }
+    updateMarkUI();
+    updatePaletteUI();
+  }
+
+  function updateMarkUI() {
+    const isMarked = markedQuestions.has(currentIndex);
+    if (markBtn) {
+      if (isMarked) {
+        markBtn.classList.add('marked');
+      } else {
+        markBtn.classList.remove('marked');
+      }
+    }
+    if (markStatusLabel) {
+      markStatusLabel.textContent = isMarked ? '✓ Marked for Review' : '';
+    }
+  }
+
+  // Section Review Window Engine
+  function openSectionReview() {
+    if (!reviewModal) return;
+    reviewTableBody.innerHTML = '';
+    selectedReviewRowIndex = null;
+    if (goToQuestionBtn) goToQuestionBtn.disabled = true;
+
+    activeQuestions.forEach((q, idx) => {
+      const tr = document.createElement('tr');
+      const uAns = userAnswers[idx];
+      const isAnswered = uAns !== null && uAns !== undefined && String(uAns).trim() !== '';
+      const isMarked = markedQuestions.has(idx);
+
+      tr.innerHTML = `
+        <td><strong>Question ${idx + 1}</strong></td>
+        <td><span style="color: ${isAnswered ? '#10b981' : '#f59e0b'}; font-weight: 700;">${isAnswered ? 'Answered' : 'Unanswered'}</span></td>
+        <td>${isMarked ? '<span style="color: #d97706; font-weight: 800; font-size: 1.1rem;">✓</span>' : ''}</td>
+      `;
+
+      tr.addEventListener('click', () => {
+        const allRows = reviewTableBody.querySelectorAll('tr');
+        allRows.forEach(r => r.classList.remove('selected-row'));
+        tr.classList.add('selected-row');
+        selectedReviewRowIndex = idx;
+        if (goToQuestionBtn) goToQuestionBtn.disabled = false;
+      });
+
+      reviewTableBody.appendChild(tr);
+    });
+
+    reviewModal.style.display = 'flex';
+  }
+
+  // Question Rendering Engine (Authentic ETS Exam Layout)
   function renderQuestion(index) {
     const q = activeQuestions[index];
     if (!q) return;
@@ -593,7 +681,19 @@ Golden Rule: ${question.rule_takeaway}`;
     const pct = ((index + 1) / activeQuestions.length) * 100;
     progressBar.style.width = `${pct}%`;
 
-    typePill.textContent = q.question_type === 'numeric' ? 'Numeric Entry' : 'Multiple Choice';
+    const displayText = q.text || q.question_text || q.questionText || "";
+    const isQC = /Quantity\s+A\s*:/i.test(displayText) && /Quantity\s+B\s*:/i.test(displayText);
+
+    if (isQC) {
+      typePill.textContent = 'Quantitative Comparison';
+    } else if (q.question_type === 'numeric' || (!q.options || q.options.length === 0)) {
+      typePill.textContent = 'Numeric Entry';
+    } else if (q.question_type === 'multiple' || (q.correct && q.correct.includes(','))) {
+      typePill.textContent = 'Select One or More';
+    } else {
+      typePill.textContent = 'Multiple Choice';
+    }
+
     sectionLabel.textContent = q.category || 'Quantitative Reasoning';
     
     if (q.isAiVariation) {
@@ -602,7 +702,6 @@ Golden Rule: ${question.rule_takeaway}`;
       variationPill.style.display = 'none';
     }
 
-    const displayText = q.text || q.question_text || q.questionText || "";
     questionText.innerHTML = formatQuestionText(displayText);
     optionsContainer.innerHTML = '';
 
@@ -612,32 +711,63 @@ Golden Rule: ${question.rule_takeaway}`;
     }
 
     if (opts.length > 0) {
-      opts.forEach((optStr) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerHTML = escapeHtml(optStr);
+      const isMultiSelect = typePill.textContent === 'Select One or More';
 
-        if (userAnswers[index] === optStr) {
-          btn.classList.add('selected');
+      opts.forEach((optStr) => {
+        const optionRow = document.createElement('div');
+        optionRow.className = 'ets-option-row';
+
+        const iconBox = document.createElement('div');
+        iconBox.className = isMultiSelect ? 'ets-checkbox-icon' : 'ets-radio-icon';
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'ets-option-label';
+        labelSpan.innerHTML = escapeHtml(optStr);
+
+        optionRow.appendChild(iconBox);
+        optionRow.appendChild(labelSpan);
+
+        if (isMultiSelect) {
+          let currentSelection = Array.isArray(userAnswers[index]) ? userAnswers[index] : (userAnswers[index] ? [userAnswers[index]] : []);
+          if (currentSelection.includes(optStr)) {
+            optionRow.classList.add('selected');
+          }
+
+          optionRow.addEventListener('click', () => {
+            let selectedArr = Array.isArray(userAnswers[index]) ? [...userAnswers[index]] : (userAnswers[index] ? [userAnswers[index]] : []);
+            if (selectedArr.includes(optStr)) {
+              selectedArr = selectedArr.filter(item => item !== optStr);
+              optionRow.classList.remove('selected');
+            } else {
+              selectedArr.push(optStr);
+              optionRow.classList.add('selected');
+            }
+            userAnswers[index] = selectedArr;
+            updatePaletteUI();
+          });
+        } else {
+          if (userAnswers[index] === optStr) {
+            optionRow.classList.add('selected');
+          }
+
+          optionRow.addEventListener('click', () => {
+            const allRows = optionsContainer.querySelectorAll('.ets-option-row');
+            allRows.forEach(r => r.classList.remove('selected'));
+            optionRow.classList.add('selected');
+            userAnswers[index] = optStr;
+            updatePaletteUI();
+          });
         }
 
-        btn.addEventListener('click', () => {
-          const selected = optionsContainer.querySelectorAll('.option-btn');
-          selected.forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          userAnswers[index] = optStr;
-          updatePaletteUI();
-        });
-
-        optionsContainer.appendChild(btn);
+        optionsContainer.appendChild(optionRow);
       });
     } else {
-      // Numeric Entry Field
+      // Numeric Entry Input Box
       const input = document.createElement('input');
       input.type = 'text';
-      input.className = 'form-input';
+      input.className = 'ets-numeric-input';
       input.id = 'numericEntryInput';
-      input.placeholder = 'Enter numerical answer...';
+      input.placeholder = 'Enter value...';
       input.value = userAnswers[index] || '';
       input.addEventListener('input', (e) => {
         userAnswers[index] = e.target.value.trim();
@@ -651,12 +781,13 @@ Golden Rule: ${question.rule_takeaway}`;
 
     if (index === activeQuestions.length - 1) {
       nextBtn.textContent = 'Submit Session ✓';
-      nextBtn.className = 'btn btn-submit';
+      nextBtn.className = 'ets-nav-btn ets-btn-nav ets-btn-next';
     } else {
       nextBtn.textContent = 'Next →';
-      nextBtn.className = 'btn btn-primary';
+      nextBtn.className = 'ets-nav-btn ets-btn-nav ets-btn-next';
     }
 
+    updateMarkUI();
     updatePaletteUI();
   }
 
@@ -691,6 +822,89 @@ Golden Rule: ${question.rule_takeaway}`;
       renderQuestion(currentIndex);
     } else {
       submitQuizSession();
+    }
+  });
+
+  // ETS Toolbar & Modal Event Listeners
+  if (quitTestBtn) {
+    quitTestBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to quit this practice session? Progress in this session will not be scored.")) {
+        showStartScreen();
+      }
+    });
+  }
+
+  if (exitSectionBtn) {
+    exitSectionBtn.addEventListener('click', () => {
+      if (confirm("Exit this section and view your score results?")) {
+        submitQuizSession();
+      }
+    });
+  }
+
+  if (fontSizeSelect) {
+    fontSizeSelect.addEventListener('change', (e) => {
+      fontSize = e.target.value;
+      testView.classList.remove('font-size-normal', 'font-size-large', 'font-size-xlarge');
+      testView.classList.add(`font-size-${fontSize}`);
+    });
+  }
+
+  if (markBtn) markBtn.addEventListener('click', toggleMarkCurrentQuestion);
+  if (reviewBtn) reviewBtn.addEventListener('click', openSectionReview);
+  if (closeReviewModalBtn) closeReviewModalBtn.addEventListener('click', () => { reviewModal.style.display = 'none'; });
+  if (returnToTestFromReviewBtn) returnToTestFromReviewBtn.addEventListener('click', () => { reviewModal.style.display = 'none'; });
+  if (goToQuestionBtn) {
+    goToQuestionBtn.addEventListener('click', () => {
+      if (selectedReviewRowIndex !== null) {
+        saveCurrentInput();
+        currentIndex = selectedReviewRowIndex;
+        renderQuestion(currentIndex);
+        reviewModal.style.display = 'none';
+      }
+    });
+  }
+
+  if (helpBtn) helpBtn.addEventListener('click', () => { if (etsHelpModal) etsHelpModal.style.display = 'flex'; });
+  if (closeHelpModalBtn) closeHelpModalBtn.addEventListener('click', () => { if (etsHelpModal) etsHelpModal.style.display = 'none'; });
+  if (closeHelpModalBtn2) closeHelpModalBtn2.addEventListener('click', () => { if (etsHelpModal) etsHelpModal.style.display = 'none'; });
+
+  if (timerToggleBtn) {
+    timerToggleBtn.addEventListener('click', () => {
+      isTimerHidden = !isTimerHidden;
+      timerToggleBtn.textContent = isTimerHidden ? 'Show Time' : 'Hide Time';
+      timerDisplay.style.visibility = isTimerHidden ? 'hidden' : 'visible';
+    });
+  }
+
+  // Desktop Keyboard Shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (!testView || testView.style.display === 'none') return;
+
+    if (e.altKey) {
+      const key = e.key.toLowerCase();
+      if (key === 'n') {
+        e.preventDefault();
+        nextBtn.click();
+      } else if (key === 'b') {
+        e.preventDefault();
+        prevBtn.click();
+      } else if (key === 'm') {
+        e.preventDefault();
+        if (markBtn) markBtn.click();
+      } else if (key === 'r') {
+        e.preventDefault();
+        if (reviewBtn) reviewBtn.click();
+      } else if (key === 'c') {
+        e.preventDefault();
+        if (calcToggleBtn) calcToggleBtn.click();
+      } else if (key === 'h') {
+        e.preventDefault();
+        if (helpBtn) helpBtn.click();
+      } else if (key === 't') {
+        e.preventDefault();
+        if (timerToggleBtn) timerToggleBtn.click();
+      }
     }
   });
 
@@ -1174,23 +1388,23 @@ Golden Rule: ${question.rule_takeaway}`;
       const quantA = normalized.substring(qAMatch.index + qAMatch[0].length, qBMatch.index).trim();
       const quantB = normalized.substring(qBMatch.index + qBMatch[0].length).trim();
 
-      let html = '';
+      let html = '<div class="qc-container">';
       if (context) {
-        html += `<div class="qc-context">${escapeHtml(context).replace(/\n/g, '<br>')}</div>`;
+        html += `<div class="qc-context-text">${escapeHtml(context).replace(/\n/g, '<br>')}</div>`;
       }
 
       html += `
-        <div class="qc-container">
-          <div class="qc-box">
-            <div class="qc-header">Quantity A</div>
-            <div class="qc-value">${escapeHtml(quantA).replace(/\n/g, '<br>')}</div>
+        <div class="qc-boxes-grid">
+          <div class="qc-column-box">
+            <div class="qc-column-header">Quantity A</div>
+            <div class="qc-column-content">${escapeHtml(quantA).replace(/\n/g, '<br>')}</div>
           </div>
-          <div class="qc-box">
-            <div class="qc-header">Quantity B</div>
-            <div class="qc-value">${escapeHtml(quantB).replace(/\n/g, '<br>')}</div>
+          <div class="qc-column-box">
+            <div class="qc-column-header">Quantity B</div>
+            <div class="qc-column-content">${escapeHtml(quantB).replace(/\n/g, '<br>')}</div>
           </div>
         </div>
-      `;
+      </div>`;
       return html;
     }
 
