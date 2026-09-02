@@ -1794,6 +1794,454 @@ const questions = [
     rule_takeaway: "Percent decrease formula is (Original - New) / Original * 100%.",
     difficulty_rating: 3
   }
+,
+  {
+    "id": 86,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 1,
+    "type": "single",
+    "text": "k is an integer for which:\n\n\\frac{1}{2^{1-k}} < \\frac{1}{8}\n\nQuantity A: k\nQuantity B: -2",
+    "options": [
+      "A: Quantity A is greater.",
+      "B: Quantity B is greater.",
+      "C: The two quantities are equal.",
+      "D: The relationship cannot be determined from the information given."
+    ],
+    "correct": "B: Quantity B is greater.",
+    "explanation": "Note that \\frac{1}{8} = 2^{-3} and \\frac{1}{2^{1-k}} = 2^{-(1-k)} = 2^{k-1}.\n\nThe inequality becomes: 2^{k-1} < 2^{-3}.\nSince base 2 > 1, order is preserved: k - 1 < -3 => k < -2.\n\nSince k is an integer strictly less than -2, Quantity A (k) is strictly less than Quantity B (-2). Therefore, Quantity B is greater.",
+    "trap_type": "Exponent Sign & Fraction Inversion Trap",
+    "trap_description": "Confusing 1 / 2^(1-k) with 2^(1-k) or flipping the inequality sign incorrectly when converting fractions.",
+    "hack_solution": "Rewrite 1/8 = 2^-3 and 1/2^(1-k) = 2^(k-1). Then k-1 < -3 => k < -2.",
+    "rule_takeaway": "When comparing exponents with base > 1, a^x < a^y iff x < y.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 87,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 2,
+    "type": "single",
+    "text": "Data Set: Selected U.S. and Northeastern Housing Data (1983-1986)\n\nTable 1: Median Home Prices in the United States by Selected Region\n\u2022 Northeast: $65,000 (1983), 22.9% Increase (1983 to 1986)\n\u2022 West: $97,000 (1983), 11.3% Increase\n\u2022 South: $62,000 (1983), 11.0% Increase\n\u2022 North Central: $55,000 (1983), 9.3% Increase\n\nTable 2: Median Home Prices and Related Data for Selected Northeastern Cities, 1986\n(All figures are median amounts)\n\u2022 New York: Price $129,700 | Down Payment $42,250 | Monthly Housing Cost $1,141 | Annual Income $49,692\n\u2022 Boston: Price $126,000 | Down Payment $30,000 | Monthly Housing Cost $1,116 | Annual Income $55,956\n\u2022 Newark: Price $116,000 | Down Payment $29,450 | Monthly Housing Cost $1,139 | Annual Income $54,660\n\u2022 Danbury: Price $95,950 | Down Payment $19,750 | Monthly Housing Cost $954 | Annual Income $51,888\n\u2022 Nashua: Price $82,000 | Down Payment $10,650 | Monthly Housing Cost $891 | Annual Income $43,200\n\u2022 Philadelphia: Price $69,450 | Down Payment $17,500 | Monthly Housing Cost $733 | Annual Income $39,180\n\u2022 Trenton: Price $66,000 | Down Payment $16,500 | Monthly Housing Cost $703 | Annual Income $37,434\n\u2022 Pittsburgh: Price $54,150 | Down Payment $11,500 | Monthly Housing Cost $673 | Annual Income $40,680\n\nIn 1986, for which of the cities listed was the median home price minus the median down payment greatest?",
+    "options": [
+      "A: New York",
+      "B: Boston",
+      "C: Newark",
+      "D: Danbury",
+      "E: Pittsburgh"
+    ],
+    "correct": "B: Boston",
+    "explanation": "Calculate (Median Home Price - Median Down Payment) for each city:\n\u2022 New York: $129,700 - $42,250 = $87,450\n\u2022 Boston: $126,000 - $30,000 = $96,000\n\u2022 Newark: $116,000 - $29,450 = $86,550\n\u2022 Danbury: $95,950 - $19,750 = $76,200\n\u2022 Pittsburgh: $54,150 - $11,500 = $42,650\nBoston has the greatest difference ($96,000).",
+    "trap_type": "Highest Initial Price Assumption",
+    "trap_description": "Assuming New York has the greatest difference because of highest overall home price ($129,700), without subtracting its large down payment ($42,250).",
+    "hack_solution": "Estimate difference: New York \u2248 130k - 42k = 88k; Boston \u2248 126k - 30k = 96k. Boston wins.",
+    "rule_takeaway": "Always perform requested subtraction rather than assuming the largest base value holds the largest difference.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 88,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 3,
+    "type": "single",
+    "text": "Refer to the housing data tables in the previous question.\n\nIn 1986 the median home price in Danbury was approximately how many times the median home price in Trenton?",
+    "options": [
+      "A: 3",
+      "B: 2",
+      "C: 1 2/3",
+      "D: 1 1/2",
+      "E: 1 1/3"
+    ],
+    "correct": "D: 1 1/2",
+    "explanation": "From Table 2:\nMedian price in Danbury = $95,950\nMedian price in Trenton = $66,000\n\nRatio: 95,950 / 66,000 \u2248 96,000 / 66,000 = 16 / 11 \u2248 1.455.\n\nConvert choices to decimals:\n\u2022 1 1/3 = 1.333\n\u2022 1 1/2 = 1.500\n\u2022 1 2/3 = 1.667\n\n1.455 is closest to 1.5 (1 1/2).",
+    "trap_type": "Rounding / Estimation Misalignment",
+    "trap_description": "Rounding 95,950 down to 90k or 66,000 to 70k leading to incorrect choices.",
+    "hack_solution": "96k / 66k = 16 / 11 = 1.45. 1.45 is closest to 1.5 (1 1/2).",
+    "rule_takeaway": "For ratio estimation, keep 2 significant figures during simplification to avoid drift.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 89,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 4,
+    "type": "single",
+    "text": "Refer to the housing data tables.\n\nIn 1986 in Newark, what was the approximate ratio of the median annual housing cost to the median homebuyer's annual income?",
+    "options": [
+      "A: 1/7",
+      "B: 1/6",
+      "C: 1/4",
+      "D: 1/3",
+      "E: 2/5"
+    ],
+    "correct": "C: 1/4",
+    "explanation": "From Table 2, for Newark:\nMonthly housing cost = $1,139 => Annual housing cost = 12 * $1,139 = $13,668.\nAnnual income = $54,660.\n\nRatio = 13,668 / 54,660 \u2248 0.25005, which is 1/4.",
+    "trap_type": "Monthly vs. Annual Cost Trap",
+    "trap_description": "Dividing monthly housing cost ($1,139) directly by annual income ($54,660) without multiplying by 12.",
+    "hack_solution": "12 * 1,140 = 13,680. 13.68k / 54.66k \u2248 1/4.",
+    "rule_takeaway": "Always check time units (monthly vs. annual) when computing financial ratios from data tables.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 90,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 5,
+    "type": "single",
+    "text": "Which of the following is equal to \\frac{6^{14}}{(2^5)(3^7)}?",
+    "options": [
+      "A: (2^2)(3^2)",
+      "B: (2^7)(3^7)",
+      "C: (2^9)(3^2)",
+      "D: (2^9)(3^7)",
+      "E: (2^9)(3^9)"
+    ],
+    "correct": "D: (2^9)(3^7)",
+    "explanation": "Express 6 in prime factors: 6 = 2 * 3.\nThus, 6^{14} = (2 * 3)^{14} = 2^{14} * 3^{14}.\n\nDividing by denominator: (2^{14} * 3^{14}) / (2^5 * 3^7) = 2^{14-5} * 3^{14-7} = 2^9 * 3^7.",
+    "trap_type": "Base Factorization Oversight",
+    "trap_description": "Attempting to cancel exponents directly between base 6 and bases 2 or 3 without prime-factorizing 6.",
+    "hack_solution": "Break 6 into 2 * 3. Exponents: 2^(14-5) = 2^9, 3^(14-7) = 3^7. Answer: (2^9)(3^7).",
+    "rule_takeaway": "When simplifying exponential expressions with composite bases, factor bases into prime components first.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 91,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 6,
+    "type": "single",
+    "text": "A certain train is traveling at a constant rate. If the train travels s miles in t hours, in how many hours will the train travel y miles?",
+    "options": [
+      "A: sy/t",
+      "B: st/y",
+      "C: ty/s",
+      "D: s/(ty)",
+      "E: (s+y)/t"
+    ],
+    "correct": "C: ty/s",
+    "explanation": "1. Rate = Distance / Time = s/t mph.\n2. Time for y miles = Distance / Rate = y / (s/t) = y * (t/s) = ty/s hours.",
+    "trap_type": "Inverted Rate Formula Trap",
+    "trap_description": "Multiplying distance by rate instead of dividing, or writing rate as t/s.",
+    "hack_solution": "Plug numbers: s = 100 miles, t = 2 hrs (50 mph). y = 150 miles => 150/50 = 3 hrs. Choice C: (2 * 150) / 100 = 3.",
+    "rule_takeaway": "When dealing with abstract algebraic variables in rate problems, plug in simple integers to verify formulas.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 92,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 7,
+    "type": "single",
+    "text": "A certain experiment has three possible outcomes. The outcomes are mutually exclusive and have probabilities p, \\frac{p}{2}, and \\frac{p}{4}, respectively. What is the value of p?",
+    "options": [
+      "A: 1/7",
+      "B: 2/7",
+      "C: 3/7",
+      "D: 4/7",
+      "E: 5/7"
+    ],
+    "correct": "D: 4/7",
+    "explanation": "Since outcomes are mutually exclusive and exhaustive, sum of probabilities = 1:\np + p/2 + p/4 = 1 => (4p + 2p + p) / 4 = 1 => 7p / 4 = 1 => p = 4/7.",
+    "trap_type": "Probability Sum Axiom Omission",
+    "trap_description": "Setting sum equal to 0 or failing to find common denominator.",
+    "hack_solution": "p(1 + 1/2 + 1/4) = p(7/4) = 1 => p = 4/7.",
+    "rule_takeaway": "The total probability of all mutually exclusive and exhaustive events in a sample space always equals 1.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 93,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 8,
+    "type": "single",
+    "text": "In the quadrilateral figure shown, two non-adjacent line segments meet to form an interior reflex angle, creating an interior non-reflex angle of x\u00b0. The top left vertex angle is 30\u00b0, the top right vertex angle is 40\u00b0, and the bottom vertex angle is a right angle (90\u00b0). What is the value of x?",
+    "hasDiagram": true,
+    "figure": "<svg viewBox=\"0 0 400 240\" width=\"100%\" height=\"220\" xmlns=\"http://www.w3.org/2000/svg\" class=\"ets-inline-svg\">\n  <style>\n    .lbl { font-family: 'Times New Roman', serif; font-style: italic; font-size: 18px; fill: var(--ets-text, #111); }\n    .line { stroke: var(--ets-text, #111); stroke-width: 2.5; fill: none; }\n    .pt { fill: var(--ets-text, #111); }\n  </style>\n  <polygon points=\"70,50 330,50 200,200 200,120\" class=\"line\" style=\"fill:rgba(0,100,200,0.03);\" />\n  <text x=\"85\" y=\"75\" class=\"lbl\">30\u00b0</text>\n  <text x=\"290\" y=\"75\" class=\"lbl\">40\u00b0</text>\n  <text x=\"188\" y=\"190\" class=\"lbl\">90\u00b0</text>\n  <text x=\"193\" y=\"105\" class=\"lbl\">x\u00b0</text>\n  <circle cx=\"70\" cy=\"50\" r=\"3\" class=\"pt\" />\n  <circle cx=\"330\" cy=\"50\" r=\"3\" class=\"pt\" />\n  <circle cx=\"200\" cy=\"200\" r=\"3\" class=\"pt\" />\n  <circle cx=\"200\" cy=\"120\" r=\"3\" class=\"pt\" />\n</svg>",
+    "options": [
+      "A: 110",
+      "B: 130",
+      "C: 150",
+      "D: 160",
+      "E: 180"
+    ],
+    "correct": "D: 160",
+    "explanation": "Boomerang / Exterior Angle Theorem: In a non-convex quadrilateral (arrowhead), the interior non-reflex angle x equals the sum of the three tip interior angles: x = 30\u00b0 + 40\u00b0 + 90\u00b0 = 160\u00b0.",
+    "trap_type": "Concave Polygon Angle Sum Trap",
+    "trap_description": "Assuming x + 30 + 40 + 90 = 360 directly without recognizing x points inwards.",
+    "hack_solution": "Boomerang theorem: center angle = sum of 3 tips = 30 + 40 + 90 = 160.",
+    "rule_takeaway": "For a boomerang / arrowhead non-convex quadrilateral, the central angle equals the sum of the three tip angles.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 94,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 9,
+    "type": "single",
+    "text": "For all positive numbers p, the operation \\blacktriangledown is defined by:\np^\\blacktriangledown = p + \\frac{1}{p}\n\nQuantity A: [( \\frac{2}{7} )^\\blacktriangledown]^\\blacktriangledown\nQuantity B: 3.5",
+    "options": [
+      "A: Quantity A is greater.",
+      "B: Quantity B is greater.",
+      "C: The two quantities are equal.",
+      "D: The relationship cannot be determined from the information given."
+    ],
+    "correct": "A: Quantity A is greater.",
+    "explanation": "1. Inner operation: (2/7)^\\blacktriangledown = 2/7 + 7/2 = (4 + 49)/14 = 53/14 \u2248 3.786.\n2. Note 53/14 > 3.5.\n3. Apply \\blacktriangledown second time: (3.786)^\\blacktriangledown = 3.786 + 1/3.786 \u2248 4.05.\n4. Since 4.05 > 3.5, Quantity A is strictly greater.",
+    "trap_type": "Single Operation Evaluation Premature Stop",
+    "trap_description": "Evaluating operation only once (getting 3.786) and comparing, or getting confused by nested brackets.",
+    "hack_solution": "2/7 + 7/2 = 3.785. Since p + 1/p > p for positive p, applying it again only increases value: 3.785 + 1/3.785 > 3.785 > 3.5. Quantity A wins!",
+    "rule_takeaway": "For p > 0, p + 1/p >= 2, and for p > 1, p^\\blacktriangledown > p.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 95,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 10,
+    "type": "single",
+    "text": "In triangle IGK:\n\u2022 H is the midpoint of IG\n\u2022 J is the midpoint of IK\n\u2022 IG = GK = 10\n\nQuantity A: IJ\nQuantity B: 5",
+    "options": [
+      "A: Quantity A is greater.",
+      "B: Quantity B is greater.",
+      "C: The two quantities are equal.",
+      "D: The relationship cannot be determined from the information given."
+    ],
+    "correct": "D: The relationship cannot be determined from the information given.",
+    "explanation": "1. J is midpoint of IK => IJ = 1/2 IK.\n2. By Triangle Inequality on \u25b3IGK: |IG - GK| < IK < IG + GK => 0 < IK < 20.\n3. Divide by 2: 0 < IJ < 10.\n4. IJ can be less than 5, equal to 5, or greater than 5. Relationship cannot be determined.",
+    "trap_type": "Isosceles / Equilateral Assumption",
+    "trap_description": "Assuming triangle IGK is equilateral (IK = 10) or right-angled without justification.",
+    "hack_solution": "The angle at G can flex freely, making side IK range between 0 and 20. Thus IJ ranges between 0 and 10. Can be <5, =5, or >5.",
+    "rule_takeaway": "Unless angles or side lengths are fixed, flexible triangle side lengths vary continuously within Triangle Inequality bounds.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 96,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 11,
+    "type": "single",
+    "text": "The figure shown is a regular octagon. A diagonal of an octagon is any line segment connecting two nonadjacent vertices.\n\nQuantity A: The number of diagonals of the octagon that are parallel to at least one side\nQuantity B: The number of diagonals of the octagon that are not parallel to any side",
+    "hasDiagram": true,
+    "figure": "<svg viewBox=\"0 0 200 200\" width=\"100%\" height=\"180\" xmlns=\"http://www.w3.org/2000/svg\" class=\"ets-inline-svg\">\n  <style>\n    .lbl { font-family: 'Times New Roman', serif; font-size: 14px; fill: var(--ets-text, #111); }\n    .line { stroke: var(--ets-text, #111); stroke-width: 2; fill: none; }\n    .diag { stroke: #0066cc; stroke-width: 1.5; stroke-dasharray: 4,4; }\n  </style>\n  <polygon points=\"58.5,15 141.5,15 185,58.5 185,141.5 141.5,185 58.5,185 15,141.5 15,58.5\" class=\"line\" />\n  <line x1=\"58.5\" y1=\"15\" x2=\"58.5\" y2=\"185\" class=\"diag\" />\n  <line x1=\"141.5\" y1=\"15\" x2=\"141.5\" y2=\"185\" class=\"diag\" />\n  <line x1=\"15\" y1=\"58.5\" x2=\"185\" y2=\"58.5\" class=\"diag\" />\n  <line x1=\"15\" y1=\"141.5\" x2=\"185\" y2=\"141.5\" class=\"diag\" />\n</svg>",
+    "options": [
+      "A: Quantity A is greater.",
+      "B: Quantity B is greater.",
+      "C: The two quantities are equal.",
+      "D: The relationship cannot be determined from the information given."
+    ],
+    "correct": "B: Quantity B is greater.",
+    "explanation": "1. Total diagonals in n-polygon = n(n-3)/2. For n=8: 8*5/2 = 20.\n2. In a regular octagon, there are 4 pairs of parallel sides. Each pair has 2 parallel diagonals => Quantity A = 4 * 2 = 8.\n3. Quantity B = 20 - 8 = 12.\n4. 12 > 8, so Quantity B is greater.",
+    "trap_type": "Polygon Diagonal Miscount",
+    "trap_description": "Forgetting diagonal formula n(n-3)/2 or undercounting parallel diagonals.",
+    "hack_solution": "Total = 20. Parallel diagonals = 8. Non-parallel = 12. 12 > 8.",
+    "rule_takeaway": "Total diagonals in an n-polygon = n(n-3)/2.",
+    "difficulty_rating": 4
+  },
+  {
+    "id": 97,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 12,
+    "type": "single",
+    "text": "The perimeter of square S is 40. Square T is inscribed in square S. What is the least possible area of square T?",
+    "hasDiagram": true,
+    "figure": "<svg viewBox=\"0 0 200 200\" width=\"100%\" height=\"180\" xmlns=\"http://www.w3.org/2000/svg\" class=\"ets-inline-svg\">\n  <style>\n    .lbl { font-family: 'Times New Roman', serif; font-size: 16px; fill: var(--ets-text, #111); }\n    .outer { stroke: var(--ets-text, #111); stroke-width: 2; fill: none; }\n    .inner { stroke: #d9534f; stroke-width: 2; fill: rgba(217,83,79,0.05); }\n  </style>\n  <rect x=\"20\" y=\"20\" width=\"160\" height=\"160\" class=\"outer\" />\n  <polygon points=\"100,20 180,100 100,180 20,100\" class=\"inner\" />\n  <text x=\"25\" y=\"40\" class=\"lbl\">S</text>\n  <text x=\"105\" y=\"95\" class=\"lbl\" style=\"fill:#d9534f;\">T</text>\n</svg>",
+    "options": [
+      "A: 45",
+      "B: 48",
+      "C: 49",
+      "D: 50",
+      "E: 52"
+    ],
+    "correct": "D: 50",
+    "explanation": "1. Side of S = 40 / 4 = 10.\n2. Let vertex of T divide side of S into a and 10-a.\n3. Area of T = a^2 + (10-a)^2 = 2a^2 - 20a + 100.\n4. Minimum occurs at a = 5 (midpoint): Area_min = 2(25) - 100 + 100 = 50.",
+    "trap_type": "Quadratic Optimization Misstep",
+    "trap_description": "Guessing 49 (which is 7^2) or thinking minimum occurs at corners.",
+    "hack_solution": "Minimum area occurs when rotated 45\u00b0 with vertices at midpoints. Midpoints split sides into 5 and 5. Side of T = \u221a(5\u00b2 + 5\u00b2) = \u221a50. Area = (\u221a50)\u00b2 = 50.",
+    "rule_takeaway": "Inscribed symmetrical figures achieve extremum (minimum area) at midpoints.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 98,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 13,
+    "type": "single",
+    "text": "Kelly took three days to travel from City C to City D. On the first day, Kelly traveled \\frac{2}{5} of the distance. On the second day, she traveled \\frac{2}{3} of the remaining distance. Which is the fraction traveled on the third day?",
+    "options": [
+      "A: 1 - 2/5 - 2/3",
+      "B: 1 - 2/5 - (2/3)(2/5)",
+      "C: 1 - 2/5 - (2/5)(1 - 2/3)",
+      "D: 1 - 2/5 - (2/3)(1 - 2/5)",
+      "E: 1 - 2/5 - (2/3)(1 - 2/5 - 2/3)"
+    ],
+    "correct": "D: 1 - 2/5 - (2/3)(1 - 2/5)",
+    "explanation": "1. Day 1: 2/5. Remaining: 1 - 2/5.\n2. Day 2: 2/3 of remaining = (2/3)(1 - 2/5).\n3. Day 3: 1 - 2/5 - (2/3)(1 - 2/5).",
+    "trap_type": "Fraction of Remaining vs Fraction of Total Trap",
+    "trap_description": "Subtracting 2/3 directly from 1 (Choice A) instead of taking 2/3 of the remaining fraction.",
+    "hack_solution": "Day 1 = 2/5. Remaining = 1 - 2/5. Day 2 = 2/3 * Remaining. Day 3 = 1 - 2/5 - (2/3)(1 - 2/5).",
+    "rule_takeaway": "'Fraction of remaining' means multiplying the second fraction by (1 - first fraction).",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 99,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 14,
+    "type": "single",
+    "text": "If x and y are integers and x = 50y + 69, which of the following must be odd?",
+    "options": [
+      "A: xy",
+      "B: x + y",
+      "C: x + 2y",
+      "D: 3x - 1",
+      "E: 3x + 1"
+    ],
+    "correct": "C: x + 2y",
+    "explanation": "1. x = 50y + 69. Since 50y is even and 69 is odd, x is always odd.\n2. x + 2y = odd + 2y = odd + even = odd. Thus x + 2y MUST be odd.",
+    "trap_type": "Parity Case Omission",
+    "trap_description": "Assuming y must be even or odd, rather than realizing 50y is ALWAYS even regardless of y.",
+    "hack_solution": "Test y = 0: x = 69 (odd). Test y = 1: x = 119 (odd). x is always odd. Then x + 2y = odd + even = odd.",
+    "rule_takeaway": "Even * Integer = Even. Even + Odd = Odd.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 100,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 15,
+    "type": "single",
+    "text": "A team won 60% of its games in the first half. In the second half, it played 20 games and won 3. If the team won 50% of the games total last year, what was the total number of games played?",
+    "options": [
+      "A: 60",
+      "B: 70",
+      "C: 80",
+      "D: 90",
+      "E: 100"
+    ],
+    "correct": "D: 90",
+    "explanation": "1. Let g = 1st half games. Wins = 0.60g.\n2. Total games = g + 20, total wins = 0.60g + 3.\n3. 0.60g + 3 = 0.50(g + 20) => 0.60g + 3 = 0.50g + 10 => 0.10g = 7 => g = 70.\n4. Total games = 70 + 20 = 90.",
+    "trap_type": "First Half Games vs Total Games Misidentification",
+    "trap_description": "Stopping at g = 70 (Choice B) and failing to add the 20 second-half games.",
+    "hack_solution": "Back-solve: If Total = 90, 1st half = 70. Wins = 0.60(70) + 3 = 42 + 3 = 45 wins out of 90 = 50%!",
+    "rule_takeaway": "Always verify whether the question asks for the initial quantity or total combined quantity.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 101,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 16,
+    "type": "multiple",
+    "text": "Of 1,150 people, x percent chose brand D. If x rounded to the nearest integer is 3, which could be the number of people who chose D?\n\nSelect ALL that apply.",
+    "options": [
+      "A: 20",
+      "B: 25",
+      "C: 30",
+      "D: 35",
+      "E: 40",
+      "F: 45",
+      "G: 50"
+    ],
+    "correct": [
+      "C: 30",
+      "D: 35",
+      "E: 40"
+    ],
+    "explanation": "1. x rounded to 3 => 2.5 <= x < 3.5.\n2. x = (N / 1150) * 100 = N / 11.5.\n3. 2.5 * 11.5 <= N < 3.5 * 11.5 => 28.75 <= N < 40.25.\n4. Valid integers for N are 29 through 40. Options in range: 30, 35, 40.",
+    "trap_type": "Rounding Inequality Boundary Error",
+    "trap_description": "Using 3.0 <= x <= 3.4 or forgetting that values from 2.5 up to 3.5 round to 3.",
+    "hack_solution": "2.5% of 1150 = 28.75. 3.5% of 1150 = 40.25. Select choices between 28.75 and 40.25: 30, 35, 40.",
+    "rule_takeaway": "Rounding an integer to n means the exact value satisfies n - 0.5 <= x < n + 0.5.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 102,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 17,
+    "type": "single",
+    "text": "b_k = \\frac{1}{k} - \\frac{1}{k+1}. What is the sum of the first 100 terms of the sequence, b_1 + b_2 + ... + b_{100}?",
+    "options": [
+      "A: 99/100",
+      "B: 100/101",
+      "C: 101/100",
+      "D: 1/100",
+      "E: 1/101"
+    ],
+    "correct": "B: 100/101",
+    "explanation": "1. Sum = (1 - 1/2) + (1/2 - 1/3) + ... + (1/100 - 1/101).\n2. Intermediate terms cancel: 1 - 1/101 = 100/101.",
+    "trap_type": "Telescoping Series Brute Force Miscalculation",
+    "trap_description": "Trying to compute individual fractions or missing cancellation pattern.",
+    "hack_solution": "Test n = 2: (1-1/2) + (1/2-1/3) = 2/3. For n terms, sum = n / (n+1). For 100 terms: 100 / 101.",
+    "rule_takeaway": "In a telescoping sum sum_{k=1}^n (a_k - a_{k+1}), internal terms cancel, leaving a_1 - a_{n+1}.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 103,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 18,
+    "type": "numeric",
+    "text": "If |x + 1| <= 5 and |y - 1| <= 5, what is the least possible value of xy?",
+    "options": [],
+    "correct": [
+      "-36"
+    ],
+    "explanation": "1. |x + 1| <= 5 => -6 <= x <= 4.\n2. |y - 1| <= 5 => -4 <= y <= 6.\n3. Least product xy: (-6) * (6) = -36.",
+    "trap_type": "Product Extremum Signs Error",
+    "trap_description": "Selecting x = -6 and y = -4 (giving +24) or x = 4 and y = 6 (giving +24), forgetting negative * positive gives a smaller (more negative) product.",
+    "hack_solution": "Bounds: x in [-6, 4], y in [-4, 6]. Corner products: (-6)(-4)=24, (-6)(6)=-36, (4)(-4)=-16, (4)(6)=24. Minimum = -36.",
+    "rule_takeaway": "To minimize a product of bounded real numbers, test all combinations of interval endpoints.",
+    "difficulty_rating": 3
+  },
+  {
+    "id": 104,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 19,
+    "type": "single",
+    "text": "The revenue of City B from 1990 to 1995 decreased by 15 percent, and from 1995 to 2000 increased by 15 percent. If the revenue in 1990 was $800,000, what was the revenue in 2000?",
+    "options": [
+      "A: $800,000",
+      "B: $782,000",
+      "C: $765,000",
+      "D: $680,000",
+      "E: $650,000"
+    ],
+    "correct": "B: $782,000",
+    "explanation": "1. Revenue in 1995 = $800,000 * 0.85 = 680,000.\n2. Revenue in 2000 = $680,000 * 1.15 = 782,000.\nNet multiplier: 0.85 * 1.15 = 0.9775. $800,000 * 0.9775 = $782,000.",
+    "trap_type": "Equal Opposite Percent Cancellation Fallacy",
+    "trap_description": "Assuming a 15% decrease followed by a 15% increase returns the value to original $800,000 (Choice A).",
+    "hack_solution": "Net change = 1 - (0.15)^2 = 0.9775. 800,000 * 0.9775 = 782,000.",
+    "rule_takeaway": "An x% decrease followed by an x% increase always results in a net decrease of (x/100)^2 percent.",
+    "difficulty_rating": 2
+  },
+  {
+    "id": 105,
+    "test": "GRE PowerPrep",
+    "section": 1,
+    "num": 20,
+    "type": "multiple",
+    "text": "If x, y, z are positive numbers such that 3x < 2y < 4z, which of the following could be true?\n\nSelect ALL that apply.",
+    "options": [
+      "A: x = y",
+      "B: y = z",
+      "C: y > z",
+      "D: x > z"
+    ],
+    "correct": [
+      "B: y = z",
+      "C: y > z",
+      "D: x > z"
+    ],
+    "explanation": "\u2022 Option A (x = y): 3x < 2x => 3 < 2 (impossible for positive x).\n\u2022 Option B (y = z): Let y=1, z=1 => 2y=2, 4z=4. Pick x=0.5 => 1.5 < 2 < 4 (True!).\n\u2022 Option C (y > z): Let z=1, y=1.5 => 2y=3, 4z=4. Pick x=0.5 => 1.5 < 3 < 4 (True!).\n\u2022 Option D (x > z): Let z=1, x=1.1, y=1.8 => 3x=3.3, 2y=3.6, 4z=4 => 3.3 < 3.6 < 4 (True!).",
+    "trap_type": "Coefficient Ratio Over-Constraint Trap",
+    "trap_description": "Assuming 3x < 2y < 4z forces x < y < z, ignoring that coefficients (3, 2, 4) alter the relative bounds of x, y, and z.",
+    "hack_solution": "Test x=y => 3x < 2x (impossible!). For y=z, test y=z=1, x=0.5 => 1.5 < 2 < 4 (works!). For y>z, test z=1, y=1.5, x=0.5 => 1.5 < 3 < 4 (works!). For x>z, test z=1, x=1.1, y=1.8 => 3.3 < 3.6 < 4 (works!).",
+    "rule_takeaway": "In 'COULD be true' inequality problems with coefficients, construct specific numerical counterexamples to test validity.",
+    "difficulty_rating": 4
+  }
 ];
 
 if (typeof window !== 'undefined') {

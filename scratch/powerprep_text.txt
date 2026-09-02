@@ -1,0 +1,375 @@
+=== PAGE 1 ===
+GRE PowerPrep Quantitative Reasoning – Study Review Guide
+Section 3 of 5
+Question 4 (Quantitative Comparison)
+Problem Statement:
+$k$ is an integer for which:
+$$\frac{1}{2^{1-k}} < \frac{1}{8}$$
+● Quantity A: $k$
+● Quantity B: $-2$
+Options:
+● (A) Quantity A is greater.
+● (B) Quantity B is greater.
+● (C) The two quantities are equal.
+● (D) The relationship cannot be determined from the information given.
+Correct Answer: (B) Quantity B is greater.
+Step-by-Step Solution:
+1. Note that $\frac{1}{8} = \frac{1}{2^3} = 2^{-3}$, and $\frac{1}{2^{1-k}} = 2^{-(1-k)} = 2^{k-
+1}$.
+2. The inequality becomes: $2^{k-1} < 2^{-3}$
+3. Since the exponential base $2 > 1$, the exponent inequality preserves the order: $k - 1 < -3 \implies k
+< -2$
+4. Since $k$ is strictly less than $-2$, Quantity A ($k$) is strictly less than Quantity B ($-2$).
+5. Therefore, Quantity B is greater.
+Data Set for Questions 6 to 8:
+Table 1: Median Home Prices in the United States by Selected Region
+Region Median Home Price 1983 % Increase 1983 to 1986
+Northeast $65,000 22.9%
+West $97,000 11.3%
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 1/10
+
+=== PAGE 2 ===
+Region Median Home Price 1983 % Increase 1983 to 1986
+South $62,000 11.0%
+North Central $55,000 9.3%
+Table 2: Median Home Prices and Related Data for Selected Northeastern Cities, 1986
+(All figures are median amounts. Housing cost consists of mortgage payment, real estate taxes, utilities, and
+hazard insurance.)
+City Price of Home Down Payment Monthly Housing
+Cost Annual Income
+New York $129,700 $42,250 $1,141 $49,692
+Boston $126,000 $30,000 $1,116 $55,956
+Newark $116,000 $29,450 $1,139 $54,660
+Danbury $95,950 $19,750 $954 $51,888
+Nashua $82,000 $10,650 $891 $43,200
+Philadelphia $69,450 $17,500 $733 $39,180
+Trenton $66,000 $16,500 $703 $37,434
+Pittsburgh $54,150 $11,500 $673 $40,680
+Question 6 (Data Interpretation)
+Problem Statement:
+In 1986, for which of the cities listed was the median home price minus the median down payment greatest?
+Options:
+● New York
+● Boston
+● Newark
+● Danbury
+● Pittsburgh
+Correct Answer: Boston
+Step-by-Step Solution:
+Calculate $(\text{Median Home Price} - \text{Median Down Payment})$ for each given option:
+● New York: $$129,700 - $42,250 = $87,450$
+● Boston: $$126,000 - $30,000 = $96,000$
+● Newark: $$116,000 - $29,450 = $86,550$
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 2/10
+
+=== PAGE 3 ===
+● Danbury: $$95,950 - $19,750 = $76,200$
+● Pittsburgh: $$54,150 - $11,500 = $42,650$
+Comparing the results, Boston has the greatest difference ($$96,000$).
+Question 7 (Data Interpretation)
+Problem Statement:
+In 1986 the median home price in Danbury was approximately how many times the median home price in
+Trenton?
+Options:
+● 3
+● 2
+● $1\frac{2}{3}$
+● $1\frac{1}{2}$
+● $1\frac{1}{3}$
+Correct Answer: $1\frac{1}{2}$
+Step-by-Step Solution:
+1. From Table 2, in 1986: Median home price in Danbury = $$95,950$; Median home price in Trenton =
+$$66,000$.
+2. Ratio: $\frac{95,950}{66,000} \approx \frac{96,000}{66,000} = \frac{16}{11} \approx 1.455$.
+3. Convert answer options to decimals: $1\frac{1}{3} \approx 1.333$; $1\frac{1}{2} = 1.500$;
+$1\frac{2}{3} \approx 1.667$.
+4. Difference comparisons: $|1.455 - 1.500| = 0.045$; $|1.455 - 1.333| = 0.122$.
+5. $1.455$ is significantly closer to $1.5$ ($1\frac{1}{2}$).
+Question 8 (Data Interpretation)
+Problem Statement:
+In 1986 in Newark, what was the approximate ratio of the median annual housing cost to the median
+homebuyer's annual income?
+Options:
+● $\frac{1}{7}$
+● $\frac{1}{6}$
+● $\frac{1}{4}$
+● $\frac{1}{3}$
+● $\frac{2}{5}$
+Correct Answer: $\frac{1}{4}$
+Step-by-Step Solution:
+1. From Table 2, for Newark: Monthly housing cost = $$1,139 \implies$ Annual housing cost = $12
+\times $1,139 = $13,668$.
+2. Homebuyer's annual income = $$54,660$.
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 3/10
+
+=== PAGE 4 ===
+3. Compute the ratio: $\frac{13,668}{54,660} \approx 0.25005 \approx \frac{1}{4}$.
+Question 9 (Algebra / Exponents)
+Problem Statement:
+Which of the following is equal to $\frac{6^{14}}{(2^5)(3^7)}$?
+Options:
+● $(2^2)(3^2)$
+● $(2^7)(3^7)$
+● $(2^9)(3^2)$
+● $(2^9)(3^7)$
+● $(2^9)(3^9)$
+Correct Answer: $(2^9)(3^7)$
+Step-by-Step Solution:
+1. Express the base 6 in terms of its prime factors: $6 = 2 \times 3$.
+2. Thus, $6^{14} = (2 \times 3)^{14} = 2^{14} \times 3^{14}$.
+3. Divide by the denominator: $\frac{2^{14} \times 3^{14}}{2^5 \times 3^7} = 2^{14-5} \times 3^{14-
+7} = 2^9 \times 3^7$.
+Question 10 (Word Problem / Rates)
+Problem Statement:
+A certain train is traveling at a constant rate. If the train travels $s$ miles in $t$ hours, in how many hours will
+the train travel $y$ miles?
+Options:
+● $\frac{sy}{t}$
+● $\frac{st}{y}$
+● $\frac{ty}{s}$
+● $\frac{s}{ty}$
+● $\frac{s+y}{t}$
+Correct Answer: $\frac{ty}{s}$
+Step-by-Step Solution:
+1. Speed (Rate) = $\frac{\text{Distance}}{\text{Time}} = \frac{s}{t}\text{ mph}$.
+2. Time needed to travel distance $y$ = $\frac{\text{Distance}}{\text{Rate}} = \frac{y}{\frac{s}{t}} =
+y \times \frac{t}{s} = \frac{ty}{s}\text{ hours}$.
+Question 11 (Probability)
+Problem Statement:
+A certain experiment has three possible outcomes. The outcomes are mutually exclusive and have probabilities
+$p$, $\frac{p}{2}$, and $\frac{p}{4}$, respectively. What is the value of $p$?
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 4/10
+
+=== PAGE 5 ===
+Options:
+● $\frac{1}{7}$
+● $\frac{2}{7}$
+● $\frac{3}{7}$
+● $\frac{4}{7}$
+● $\frac{5}{7}$
+Correct Answer: $\frac{4}{7}$
+Step-by-Step Solution:
+1. Since the outcomes are mutually exclusive and account for all possible outcomes, their sum must
+equal 1: $p + \frac{p}{2} + \frac{p}{4} = 1$.
+2. Find a common denominator (4): $\frac{4p + 2p + p}{4} = 1 \implies \frac{7p}{4} = 1$.
+3. Multiply both sides by 4 and divide by 7: $7p = 4 \implies p = \frac{4}{7}$.
+Question 12 (Geometry)
+Problem Statement:
+In the figure shown, two lines intersect forming an angle $x^\circ$ between them, with outer angles $30^\circ$
+and $40^\circ$ at the upper corners, and a right angle ($90^\circ$) at the bottom vertex. What is the value of
+$x$?
+Correct Answer: $160$
+Step-by-Step Solution:
+1. This figure is a non-convex (concave) quadrilateral.
+2. By the exterior angle theorem, the interior non-reflex angle $x$ equals the sum of the three opposite
+interior angles: $x = 30^\circ + 40^\circ + 90^\circ = 160^\circ$.
+3. Alternatively, the four interior angles of the quadrilateral are $30^\circ, 40^\circ, 90^\circ$, and the
+reflex angle $(360^\circ - x^\circ)$.
+4. $\text{Sum} = 30^\circ + 40^\circ + 90^\circ + (360^\circ - x) = 360^\circ \implies 160^\circ +
+360^\circ - x = 360^\circ \implies x = 160$.
+Section 5 of 5
+Question 2 (Quantitative Comparison)
+Problem Statement:
+For all positive numbers $p$, the operation $\blacktriangledown$ is defined by:
+$$p^\blacktriangledown = p + \frac{1}{p}$$
+● Quantity A: $[(\frac{2}{7})^\blacktriangledown]^\blacktriangledown$
+● Quantity B: $3.5$
+Options:
+● (A) Quantity A is greater.
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 5/10
+
+=== PAGE 6 ===
+● (B) Quantity B is greater.
+● (C) The two quantities are equal.
+● (D) The relationship cannot be determined from the information given.
+Correct Answer: (A) Quantity A is greater.
+Step-by-Step Solution:
+1. Evaluate the inner operation for Quantity A: $(\frac{2}{7})^\blacktriangledown = \frac{2}{7} +
+\frac{7}{2} = \frac{4 + 49}{14} = \frac{53}{14} \approx 3.786$.
+2. Notice that $\frac{53}{14} > 3.5 = \frac{49}{14}$.
+3. Apply $\blacktriangledown$ a second time: $(\frac{53}{14})^\blacktriangledown = \frac{53}{14} +
+\frac{14}{53} \approx 3.786 + 0.264 = 4.05$.
+4. Since $4.05 > 3.5$, Quantity A is strictly greater than Quantity B.
+Question 4 (Quantitative Comparison)
+Problem Statement:
+In triangle $IGK$:
+● $H$ is the midpoint of $IG$
+● $J$ is the midpoint of $IK$
+● $IG = GK = 10$
+● Quantity A: $IJ$
+● Quantity B: $5$
+Options:
+● (A) Quantity A is greater.
+● (B) Quantity B is greater.
+● (C) The two quantities are equal.
+● (D) The relationship cannot be determined from the information given.
+Correct Answer: (D) The relationship cannot be determined from the information given.
+Step-by-Step Solution:
+1. Since $J$ is the midpoint of $IK$, $IJ = \frac{1}{2} IK$.
+2. By the Triangle Inequality theorem in $\triangle IGK$: $|IG - GK| < IK < IG + GK \implies |10 - 10|
+< IK < 10 + 10 \implies 0 < IK < 20$.
+3. Dividing by 2 gives: $0 < IJ < 10$.
+4. If $IK = 10$, then $IJ = 5$ (A = B). If $IK = 14$, $IJ = 7$ (A > B). If $IK = 6$, $IJ = 3$ (B > A).
+5. Therefore, the relationship cannot be determined.
+Question 5 (Quantitative Comparison)
+Problem Statement:
+The figure shown is a regular octagon. A diagonal of an octagon is any line segment connecting two
+nonadjacent vertices.
+● Quantity A: The number of diagonals of the octagon that are parallel to at least one side
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 6/10
+
+=== PAGE 7 ===
+● Quantity B: The number of diagonals of the octagon that are not parallel to any side
+Options:
+● (A) Quantity A is greater.
+● (B) Quantity B is greater.
+● (C) The two quantities are equal.
+● (D) The relationship cannot be determined from the information given.
+Correct Answer: (B) Quantity B is greater.
+Step-by-Step Solution:
+1. Total number of diagonals in an $n$-sided polygon is $\frac{n(n - 3)}{2}$. For $n = 8$: $\frac{8
+\times 5}{2} = 20$.
+2. In a regular octagon, there are 4 pairs of parallel sides. For each pair of opposite sides, exactly 2
+diagonals are parallel to those sides.
+3. Quantity A = $4 \times 2 = 8$.
+4. Quantity B = $20 - 8 = 12$.
+5. Since $12 > 8$, Quantity B is greater.
+Question 7 (Geometry)
+Problem Statement:
+The perimeter of square $S$ is 40. Square $T$ is inscribed in square $S$. What is the least possible area of
+square $T$?
+Options:
+● 45
+● 48
+● 49
+● 50
+● 52
+Correct Answer: 50
+Step-by-Step Solution:
+1. Perimeter of $S = 40 \implies$ side length = 10.
+2. Let $a$ and $10 - a$ be segments of the side of $S$ divided by a vertex of $T$.
+3. $\text{Area}(T) = a^2 + (10 - a)^2 = 2a^2 - 20a + 100$.
+4. The minimum value occurs when $a = 5$ (midpoint): $\text{Area}_{\min} = 2(5)^2 - 20(5) + 100 =
+50 - 100 + 100 = 50$.
+Question 8 (Fractions / Word Problem)
+Problem Statement:
+Kelly took three days to travel from City C to City D. On the first day, Kelly traveled $\frac{2}{5}$ of the
+distance. On the second day, she traveled $\frac{2}{3}$ of the remaining distance. Which is the fraction
+traveled on the third day?
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 7/10
+
+=== PAGE 8 ===
+Options:
+● $1 - \frac{2}{5} - \frac{2}{3}$
+● $1 - \frac{2}{5} - \frac{2}{3}\left(\frac{2}{5}\right)$
+● $1 - \frac{2}{5} - \frac{2}{5}\left(1 - \frac{2}{3}\right)$
+● $1 - \frac{2}{5} - \frac{2}{3}\left(1 - \frac{2}{5}\right)$
+● $1 - \frac{2}{5} - \frac{2}{3}\left(1 - \frac{2}{5} - \frac{2}{3}\right)$
+Correct Answer: $1 - \frac{2}{5} - \frac{2}{3}\left(1 - \frac{2}{5}\right)$
+Step-by-Step Solution:
+1. Day 1: $\frac{2}{5}$. Remaining distance: $1 - \frac{2}{5}$.
+2. Day 2: $\frac{2}{3}$ of $(1 - \frac{2}{5}) = \frac{2}{3}(1 - \frac{2}{5})$.
+3. Day 3: $1 - (\text{Day 1}) - (\text{Day 2}) = 1 - \frac{2}{5} - \frac{2}{3}(1 - \frac{2}{5})$.
+Question 9 (Number Properties)
+Problem Statement:
+If $x$ and $y$ are integers and $x = 50y + 69$, which of the following must be odd?
+Options:
+● $xy$
+● $x + y$
+● $x + 2y$
+● $3x - 1$
+● $3x + 1$
+Correct Answer: $x + 2y$
+Step-by-Step Solution:
+1. $x = 50y + 69$. Since $50y$ is even and $69$ is odd, $x$ is always odd.
+2. Evaluate choices: $x + 2y = \text{odd} + \text{even} = \text{odd}$. This is always odd.
+Question 10 (Weighted Averages / Percentages)
+Problem Statement:
+A team won 60% of its games in the first half. In the second half, it played 20 games and won 3. If the team
+won 50% of the games total last year, what was the total number of games played?
+Options:
+● 60
+● 70
+● 80
+● 90
+● 100
+Correct Answer: 90
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 8/10
+
+=== PAGE 9 ===
+Step-by-Step Solution:
+1. Let $g$ be games in first half. Wins = $0.60g$.
+2. Second half: 20 games, 3 wins.
+3. Total games = $g + 20$. Total wins = $0.60g + 3$.
+4. $0.60g + 3 = 0.50(g + 20) \implies 0.60g + 3 = 0.50g + 10 \implies 0.10g = 7 \implies g = 70$.
+5. Total games = $70 + 20 = 90$.
+Question 11 (Rounding / Integer Constraints)
+Problem Statement:
+Of 1,150 people, $x$ percent chose brand D. If $x$ rounded to the nearest integer is 3, which could be the
+number of people who chose D?
+Options:
+● 20, 25, 30, 35, 40, 45, 50
+Correct Answer: 30, 35, 40
+Step-by-Step Solution:
+1. $2.5 \le x < 3.5$.
+2. $x = \frac{N}{1150} \times 100 = \frac{N}{11.5}$.
+3. $2.5 \times 11.5 \le N < 3.5 \times 11.5 \implies 28.75 \le N < 40.25$.
+4. Valid integers: 29 through 40. Options matching: 30, 35, 40.
+Question 12 (Sequences / Telescoping Series)
+Problem Statement:
+$b_k = \frac{1}{k} - \frac{1}{k+1}$. What is the sum of the first 100 terms?
+Correct Answer: $\frac{100}{101}$
+Step-by-Step Solution:
+1. Sum = $(1 - \frac{1}{2}) + (\frac{1}{2} - \frac{1}{3}) + \dots + (\frac{1}{100} - \frac{1}{101})$.
+2. Intermediate terms cancel: $1 - \frac{1}{101} = \frac{100}{101}$.
+Question 13 (Absolute Value Inequalities)
+Problem Statement:
+If $|x + 1| \le 5$ and $|y - 1| \le 5$, what is the least possible value of $xy$?
+Correct Answer: $-36$
+Step-by-Step Solution:
+1. $-6 \le x \le 4$ and $-4 \le y \le 6$.
+2. Least product $xy$: $(-6) \times (6) = -36$.
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 9/10
+
+=== PAGE 10 ===
+Question 14 (Data Interpretation)
+Problem Statement:
+City B revenue: 1990 to 1995 was $-15%$ change; 1995 to 2000 was $+15%$ change. If 1990 revenue was
+$$800,000$, what was it in 2000?
+Correct Answer: $$782,000$
+Step-by-Step Solution:
+1. Revenue (1995) = $800,000 \times 0.85 = 680,000$.
+2. Revenue (2000) = $680,000 \times 1.15 = 782,000$.
+Question 15 (Inequalities / Positive Numbers)
+Problem Statement:
+If $x, y, z > 0$ and $3x < 2y < 4z$, which could be true?
+Options:
+● $x = y$, $y = z$, $y > z$, $x > z$
+Correct Answer: $y = z$, $y > z$, $x > z$
+Step-by-Step Solution:
+1. $x = y$: $3x < 2x \implies 3 < 2$ (False).
+2. $y = z$: Let $y=1, z=1 \implies 2 < 4$. If $x=0.5, 1.5 < 2 < 4$ (True).
+3. $y > z$: Let $z=1, y=1.5 \implies 3 < 4$. If $x=0.5, 1.5 < 3 < 4$ (True).
+4. $x > z$: Let $z=1, x=1.1, y=1.8 \implies 3.3 < 3.6 < 4$ (True).
+GRE PowerPrep - Practice Test Questions & Solutions
+9/2/26, 8:47 AM GRE PowerPrep - Practice Test Questions & Solutions
+https://docs.google.com/document/u/0/d/15E_7hCrOSez9uYsqDDIIvl0jtX8ezHaY0Q_mmUO9uAA/mobilebasic?hl=en&urp=gmail_link 10/10
+
