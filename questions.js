@@ -5,7 +5,24 @@ const questions = [
     section: 4,
     num: 1,
     type: "single",
-    text: "Line k is parallel to line m. [See PDF for Figure]\n\nQuantity A: x + y\nQuantity B: w + z",
+    text: "Line k is parallel to line m.\n\nQuantity A: x + y\nQuantity B: w + z",
+    hasDiagram: true,
+    figure: `<svg viewBox="0 0 400 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" class="ets-inline-svg">
+  <style>
+    .lbl { font-family: 'Times New Roman', serif; font-style: italic; font-size: 18px; fill: var(--ets-text, #111); }
+    .line { stroke: var(--ets-text, #111); stroke-width: 2; }
+  </style>
+  <line x1="40" y1="30" x2="340" y2="30" class="line" />
+  <text x="350" y="35" class="lbl">k</text>
+  <line x1="40" y1="130" x2="340" y2="130" class="line" />
+  <text x="350" y="135" class="lbl">m</text>
+  <line x1="110" y1="130" x2="190" y2="30" class="line" />
+  <line x1="190" y1="30" x2="270" y2="130" class="line" />
+  <text x="160" y="52" class="lbl">x°</text>
+  <text x="210" y="52" class="lbl">y°</text>
+  <text x="135" y="122" class="lbl">z°</text>
+  <text x="235" y="122" class="lbl">w°</text>
+</svg>`,
     options: [
       "A: Quantity A is greater.",
       "B: Quantity B is greater.",
@@ -35,7 +52,26 @@ const questions = [
     section: 4,
     num: 3,
     type: "single",
-    text: "Three circles with their centers on line segment PQ are tangent at points P, R, and Q, where point R lies on line segment PQ. [See PDF for Figure]\n\nQuantity A: The circumference of the largest circle\nQuantity B: The sum of the circumferences of the two smaller circles",
+    text: "Three circles with their centers on line segment PQ are tangent at points P, R, and Q, where point R lies on line segment PQ.\n\nQuantity A: The circumference of the largest circle\nQuantity B: The sum of the circumferences of the two smaller circles",
+    hasDiagram: true,
+    figure: `<svg viewBox="0 0 400 220" width="100%" height="200" xmlns="http://www.w3.org/2000/svg" class="ets-inline-svg">
+  <style>
+    .lbl { font-family: 'Times New Roman', serif; font-style: italic; font-size: 18px; fill: var(--ets-text, #111); }
+    .circ { fill: none; stroke: var(--ets-text, #111); stroke-width: 2; }
+    .line { stroke: var(--ets-text, #111); stroke-width: 2; }
+    .pt { fill: var(--ets-text, #111); }
+  </style>
+  <circle cx="200" cy="110" r="90" class="circ" />
+  <line x1="110" y1="110" x2="290" y2="110" class="line" />
+  <circle cx="165" cy="110" r="55" class="circ" />
+  <circle cx="255" cy="110" r="35" class="circ" />
+  <circle cx="110" cy="110" r="3.5" class="pt" />
+  <text x="95" y="115" class="lbl">P</text>
+  <circle cx="220" cy="110" r="3.5" class="pt" />
+  <text x="215" y="132" class="lbl">R</text>
+  <circle cx="290" cy="110" r="3.5" class="pt" />
+  <text x="300" y="115" class="lbl">Q</text>
+</svg>`,
     options: [
       "A: Quantity A is greater.",
       "B: Quantity B is greater.",
@@ -65,7 +101,81 @@ const questions = [
     section: 4,
     num: 5,
     type: "single",
-    text: "The preceding frequency distributions represent two groups of data. Each of the data values is a multiple of 10. [See PDF for Figure]\n\nQuantity A: The standard deviation of distribution C\nQuantity B: The standard deviation of distribution D",
+    text: "The frequency distributions shown represent two groups of data. Each of the data values is a multiple of 10.\n\nQuantity A: The standard deviation of distribution C\nQuantity B: The standard deviation of distribution D",
+    hasDiagram: true,
+    figure: `<div class="ets-dual-charts-container">
+  <svg viewBox="0 0 220 200" width="200" height="180" xmlns="http://www.w3.org/2000/svg" class="ets-bar-chart-svg">
+    <style>
+      .title { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: var(--ets-text, #111); text-anchor: middle; }
+      .axis-text { font-family: sans-serif; font-size: 12px; fill: var(--ets-text, #111); }
+      .bar { fill: var(--ets-bar, #a8a8a8); stroke: var(--ets-text, #111); stroke-width: 1.5; }
+      .line { stroke: var(--ets-text, #111); stroke-width: 1.5; }
+      .grid { stroke: #ccc; stroke-width: 1; stroke-dasharray: 2,2; }
+    </style>
+    <text x="110" y="20" class="title">Distribution C</text>
+    <line x1="45" y1="40" x2="205" y2="40" class="grid" />
+    <line x1="45" y1="62" x2="205" y2="62" class="grid" />
+    <line x1="45" y1="83" x2="205" y2="83" class="grid" />
+    <line x1="45" y1="105" x2="205" y2="105" class="grid" />
+    <line x1="45" y1="127" x2="205" y2="127" class="grid" />
+    <line x1="45" y1="148" x2="205" y2="148" class="grid" />
+    <text x="35" y="44" class="axis-text" text-anchor="end">6</text>
+    <text x="35" y="66" class="axis-text" text-anchor="end">5</text>
+    <text x="35" y="87" class="axis-text" text-anchor="end">4</text>
+    <text x="35" y="109" class="axis-text" text-anchor="end">3</text>
+    <text x="35" y="131" class="axis-text" text-anchor="end">2</text>
+    <text x="35" y="152" class="axis-text" text-anchor="end">1</text>
+    <text x="35" y="174" class="axis-text" text-anchor="end">0</text>
+    <line x1="45" y1="30" x2="45" y2="170" class="line" />
+    <line x1="45" y1="170" x2="205" y2="170" class="line" />
+    <rect x="50" y="105" width="28" height="65" class="bar" />
+    <rect x="80" y="105" width="28" height="65" class="bar" />
+    <rect x="110" y="40" width="28" height="130" class="bar" />
+    <rect x="140" y="105" width="28" height="65" class="bar" />
+    <rect x="170" y="105" width="28" height="65" class="bar" />
+    <text x="64" y="187" class="axis-text" text-anchor="middle">10</text>
+    <text x="94" y="187" class="axis-text" text-anchor="middle">20</text>
+    <text x="124" y="187" class="axis-text" text-anchor="middle">30</text>
+    <text x="154" y="187" class="axis-text" text-anchor="middle">40</text>
+    <text x="184" y="187" class="axis-text" text-anchor="middle">50</text>
+  </svg>
+
+  <svg viewBox="0 0 220 200" width="200" height="180" xmlns="http://www.w3.org/2000/svg" class="ets-bar-chart-svg">
+    <style>
+      .title { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: var(--ets-text, #111); text-anchor: middle; }
+      .axis-text { font-family: sans-serif; font-size: 12px; fill: var(--ets-text, #111); }
+      .bar { fill: var(--ets-bar, #a8a8a8); stroke: var(--ets-text, #111); stroke-width: 1.5; }
+      .line { stroke: var(--ets-text, #111); stroke-width: 1.5; }
+      .grid { stroke: #ccc; stroke-width: 1; stroke-dasharray: 2,2; }
+    </style>
+    <text x="110" y="20" class="title">Distribution D</text>
+    <line x1="45" y1="40" x2="205" y2="40" class="grid" />
+    <line x1="45" y1="62" x2="205" y2="62" class="grid" />
+    <line x1="45" y1="83" x2="205" y2="83" class="grid" />
+    <line x1="45" y1="105" x2="205" y2="105" class="grid" />
+    <line x1="45" y1="127" x2="205" y2="127" class="grid" />
+    <line x1="45" y1="148" x2="205" y2="148" class="grid" />
+    <text x="35" y="44" class="axis-text" text-anchor="end">6</text>
+    <text x="35" y="66" class="axis-text" text-anchor="end">5</text>
+    <text x="35" y="87" class="axis-text" text-anchor="end">4</text>
+    <text x="35" y="109" class="axis-text" text-anchor="end">3</text>
+    <text x="35" y="131" class="axis-text" text-anchor="end">2</text>
+    <text x="35" y="152" class="axis-text" text-anchor="end">1</text>
+    <text x="35" y="174" class="axis-text" text-anchor="end">0</text>
+    <line x1="45" y1="30" x2="45" y2="170" class="line" />
+    <line x1="45" y1="170" x2="205" y2="170" class="line" />
+    <rect x="50" y="62" width="28" height="108" class="bar" />
+    <rect x="80" y="105" width="28" height="65" class="bar" />
+    <rect x="110" y="127" width="28" height="43" class="bar" />
+    <rect x="140" y="105" width="28" height="65" class="bar" />
+    <rect x="170" y="62" width="28" height="108" class="bar" />
+    <text x="64" y="187" class="axis-text" text-anchor="middle">10</text>
+    <text x="94" y="187" class="axis-text" text-anchor="middle">20</text>
+    <text x="124" y="187" class="axis-text" text-anchor="middle">30</text>
+    <text x="154" y="187" class="axis-text" text-anchor="middle">40</text>
+    <text x="184" y="187" class="axis-text" text-anchor="middle">50</text>
+  </svg>
+</div>`,
     options: [
       "A: Quantity A is greater.",
       "B: Quantity B is greater.",
@@ -413,7 +523,31 @@ const questions = [
     section: 5,
     num: 13,
     type: "single",
-    text: "[Distribution of the 50 States of the United States by Population, 2000 - See PDF for Figure]\nIn 2000 the population of West Virginia was 1.8 million. If the ratio of the population of Georgia to that of West Virginia was 9 to 2, in which population category was Georgia?",
+    text: "In 2000 the population of West Virginia was 1.8 million. If the ratio of the population of Georgia to that of West Virginia was 9 to 2, in which population category was Georgia?",
+    hasDiagram: true,
+    figure: `<div class="ets-data-table-card">
+  <div class="ets-data-table-title">Distribution of the 50 States of the United States by Population,* 2000</div>
+  <table class="ets-data-table">
+    <thead>
+      <tr>
+        <th>Population Category</th>
+        <th>Population (millions)</th>
+        <th>Number of States</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>A</td><td>0.0 – 1.9</td><td>15 <span class="pop-bar-inline" style="width: 120px;"></span></td></tr>
+      <tr><td>B</td><td>2.0 – 3.9</td><td>9 <span class="pop-bar-inline" style="width: 72px;"></span></td></tr>
+      <tr><td>C</td><td>4.0 – 5.9</td><td>12 <span class="pop-bar-inline" style="width: 96px;"></span></td></tr>
+      <tr><td>D</td><td>6.0 – 7.9</td><td>3 <span class="pop-bar-inline" style="width: 24px;"></span></td></tr>
+      <tr><td>E</td><td>8.0 – 9.9</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+      <tr><td>F</td><td>10.0 – 11.9</td><td>1 <span class="pop-bar-inline" style="width: 8px;"></span></td></tr>
+      <tr><td>G</td><td>12.0 – 13.9</td><td>2 <span class="pop-bar-inline" style="width: 16px;"></span></td></tr>
+      <tr><td>H</td><td>14.0 and over</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+    </tbody>
+  </table>
+  <div class="ets-data-footnote">*Population of each state is rounded to the nearest 0.1 million.</div>
+</div>`,
     options: [
       "A: B",
       "B: C",
@@ -429,7 +563,31 @@ const questions = [
     section: 5,
     num: 14,
     type: "single",
-    text: "[Distribution of the 50 States of the United States by Population, 2000 - See PDF for Figure]\nThe number of states in the two population categories C and D was approximately what percent greater than the number in the four population categories from E through H ?",
+    text: "The number of states in the two population categories C and D was approximately what percent greater than the number in the four population categories from E through H ?",
+    hasDiagram: true,
+    figure: `<div class="ets-data-table-card">
+  <div class="ets-data-table-title">Distribution of the 50 States of the United States by Population,* 2000</div>
+  <table class="ets-data-table">
+    <thead>
+      <tr>
+        <th>Population Category</th>
+        <th>Population (millions)</th>
+        <th>Number of States</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>A</td><td>0.0 – 1.9</td><td>15 <span class="pop-bar-inline" style="width: 120px;"></span></td></tr>
+      <tr><td>B</td><td>2.0 – 3.9</td><td>9 <span class="pop-bar-inline" style="width: 72px;"></span></td></tr>
+      <tr><td>C</td><td>4.0 – 5.9</td><td>12 <span class="pop-bar-inline" style="width: 96px;"></span></td></tr>
+      <tr><td>D</td><td>6.0 – 7.9</td><td>3 <span class="pop-bar-inline" style="width: 24px;"></span></td></tr>
+      <tr><td>E</td><td>8.0 – 9.9</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+      <tr><td>F</td><td>10.0 – 11.9</td><td>1 <span class="pop-bar-inline" style="width: 8px;"></span></td></tr>
+      <tr><td>G</td><td>12.0 – 13.9</td><td>2 <span class="pop-bar-inline" style="width: 16px;"></span></td></tr>
+      <tr><td>H</td><td>14.0 and over</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+    </tbody>
+  </table>
+  <div class="ets-data-footnote">*Population of each state is rounded to the nearest 0.1 million.</div>
+</div>`,
     options: [
       "A: 36%",
       "B: 33%",
@@ -445,7 +603,31 @@ const questions = [
     section: 5,
     num: 15,
     type: "single",
-    text: "[Distribution of the 50 States of the United States by Population, 2000 - See PDF for Figure]\nThe median of the 50 state populations was in which population category?",
+    text: "The median of the 50 state populations was in which population category?",
+    hasDiagram: true,
+    figure: `<div class="ets-data-table-card">
+  <div class="ets-data-table-title">Distribution of the 50 States of the United States by Population,* 2000</div>
+  <table class="ets-data-table">
+    <thead>
+      <tr>
+        <th>Population Category</th>
+        <th>Population (millions)</th>
+        <th>Number of States</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>A</td><td>0.0 – 1.9</td><td>15 <span class="pop-bar-inline" style="width: 120px;"></span></td></tr>
+      <tr><td>B</td><td>2.0 – 3.9</td><td>9 <span class="pop-bar-inline" style="width: 72px;"></span></td></tr>
+      <tr><td>C</td><td>4.0 – 5.9</td><td>12 <span class="pop-bar-inline" style="width: 96px;"></span></td></tr>
+      <tr><td>D</td><td>6.0 – 7.9</td><td>3 <span class="pop-bar-inline" style="width: 24px;"></span></td></tr>
+      <tr><td>E</td><td>8.0 – 9.9</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+      <tr><td>F</td><td>10.0 – 11.9</td><td>1 <span class="pop-bar-inline" style="width: 8px;"></span></td></tr>
+      <tr><td>G</td><td>12.0 – 13.9</td><td>2 <span class="pop-bar-inline" style="width: 16px;"></span></td></tr>
+      <tr><td>H</td><td>14.0 and over</td><td>4 <span class="pop-bar-inline" style="width: 32px;"></span></td></tr>
+    </tbody>
+  </table>
+  <div class="ets-data-footnote">*Population of each state is rounded to the nearest 0.1 million.</div>
+</div>`,
     options: [
       "A: A",
       "B: B",
@@ -471,7 +653,35 @@ const questions = [
     section: 5,
     num: 17,
     type: "single",
-    text: "The figure shows the standard normal distribution, with mean 0 and standard deviation 1, including approximate percents of the distribution corresponding to the six regions shown. [See PDF for Figure]\n\nIan rode the bus to work last year. His travel times to work were approximately normally distributed, with a mean of 35 minutes and a standard deviation of 5 minutes. According to the figure shown, approximately what percent of Ian's travel times to work last year were less than 40 minutes?",
+    text: "The figure shows the standard normal distribution, with mean 0 and standard deviation 1, including approximate percents of the distribution corresponding to the six regions shown.\n\nIan rode the bus to work last year. His travel times to work were approximately normally distributed, with a mean of 35 minutes and a standard deviation of 5 minutes. According to the figure shown, approximately what percent of Ian's travel times to work last year were less than 40 minutes?",
+    hasDiagram: true,
+    figure: `<svg viewBox="0 0 500 220" width="100%" height="200" xmlns="http://www.w3.org/2000/svg" class="ets-inline-svg">
+  <style>
+    .lbl { font-family: sans-serif; font-size: 14px; fill: var(--ets-text, #111); text-anchor: middle; }
+    .pct { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: var(--ets-text, #111); text-anchor: middle; }
+    .line { stroke: var(--ets-text, #111); stroke-width: 2; }
+    .curve { fill: none; stroke: var(--ets-text, #111); stroke-width: 2.5; }
+    .div-line { stroke: var(--ets-text, #111); stroke-width: 1.5; stroke-dasharray: 4,3; }
+  </style>
+  <line x1="30" y1="160" x2="470" y2="160" class="line" />
+  <path d="M 30,158 C 100,158 130,140 170,100 C 200,70 220,30 250,30 C 280,30 300,70 330,100 C 370,140 400,158 470,158" class="curve" />
+  <line x1="115" y1="150" x2="115" y2="168" class="line" />
+  <text x="115" y="188" class="lbl">-2</text>
+  <line x1="182" y1="90" x2="182" y2="168" class="div-line" />
+  <text x="182" y="188" class="lbl">-1</text>
+  <line x1="250" y1="30" x2="250" y2="168" class="line" />
+  <text x="250" y="188" class="lbl">0</text>
+  <line x1="318" y1="90" x2="318" y2="168" class="div-line" />
+  <text x="318" y="188" class="lbl">1</text>
+  <line x1="385" y1="150" x2="385" y2="168" class="line" />
+  <text x="385" y="188" class="lbl">2</text>
+  <text x="75" y="142" class="pct">2%</text>
+  <text x="148" y="125" class="pct">14%</text>
+  <text x="216" y="85" class="pct">34%</text>
+  <text x="284" y="85" class="pct">34%</text>
+  <text x="352" y="125" class="pct">14%</text>
+  <text x="425" y="142" class="pct">2%</text>
+</svg>`,
     options: [
       "A: 14%",
       "B: 34%",

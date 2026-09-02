@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeQuizMode = 'mini_5'; // 'mini_5', 'mini_10', 'full_27'
   let enableAiVariations = false;
+  let excludeDiagrams = false;
   let activeTutorQuestion = null;
   let tutorChatHistory = [];
 
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const startModeCards = document.querySelectorAll('.start-mode-card');
   const startEnableAiCheck = document.getElementById('startEnableAiCheck');
+  const startExcludeDiagramsCheck = document.getElementById('startExcludeDiagramsCheck');
   const startBankProgressText = document.getElementById('startBankProgressText');
   const startResetProgressBtn = document.getElementById('startResetProgressBtn');
   const startQuizBtn = document.getElementById('startQuizBtn');
@@ -421,8 +423,13 @@ Golden Rule: ${question.rule_takeaway}`;
   }
 
   async function updateQuestionProgressUI(totalCount) {
+    let rawBank = await fetchQuestionBank();
+    if (excludeDiagrams) {
+      rawBank = rawBank.filter(q => !q.hasDiagram && !q.figure);
+    }
+    const bankTotal = totalCount || rawBank.length;
     const seenKeys = new Set(getSeenQuestionKeys());
-    const countText = `${seenKeys.size} / ${totalCount} seen`;
+    const countText = `${seenKeys.size} / ${bankTotal} seen`;
 
     const modalProgressEl = document.getElementById('questionProgressText');
     if (modalProgressEl) modalProgressEl.textContent = countText;
@@ -432,7 +439,10 @@ Golden Rule: ${question.rule_takeaway}`;
   }
 
   async function initQuizSession() {
-    const rawBank = await fetchQuestionBank();
+    let rawBank = await fetchQuestionBank();
+    if (excludeDiagrams) {
+      rawBank = rawBank.filter(q => !q.hasDiagram && !q.figure);
+    }
     const seenKeys = new Set(getSeenQuestionKeys());
 
     // Separate bank into unseen and seen question pools
@@ -719,7 +729,7 @@ Golden Rule: ${question.rule_takeaway}`;
       variationPill.style.display = 'none';
     }
 
-    questionText.innerHTML = formatQuestionText(displayText);
+    questionText.innerHTML = formatQuestionText(displayText, q);
     optionsContainer.innerHTML = '';
 
     let opts = q.options || [];
@@ -1224,6 +1234,13 @@ Golden Rule: ${question.rule_takeaway}`;
     });
   }
 
+  if (startExcludeDiagramsCheck) {
+    startExcludeDiagramsCheck.addEventListener('change', (e) => {
+      excludeDiagrams = e.target.checked;
+      updateQuestionProgressUI();
+    });
+  }
+
   if (startResetProgressBtn) {
     startResetProgressBtn.addEventListener('click', async () => {
       clearSeenQuestionHistory();
@@ -1433,11 +1450,13 @@ Golden Rule: ${question.rule_takeaway}`;
     }, 3000);
   }
 
-  function formatQuestionText(rawText) {
-    if (!rawText) return '';
+  function formatQuestionText(rawText, qObj) {
+    if (!rawText && (!qObj || !qObj.figure)) return '';
+
+    let figureHtml = (qObj && qObj.figure) ? `<div class="ets-inline-figure-wrapper">${qObj.figure}</div>` : '';
 
     // Convert literal backslash-n escape sequences (\n or \r\n) from JSON string payloads to real newlines
-    let normalized = rawText.replace(/\\n/g, '\n').replace(/\\r/g, '');
+    let normalized = (rawText || '').replace(/\\n/g, '\n').replace(/\\r/g, '');
 
     // Check for Quantitative Comparison format ("Quantity A:" and "Quantity B:")
     const qAMatch = normalized.match(/Quantity\s+A\s*:/i);
@@ -1449,6 +1468,9 @@ Golden Rule: ${question.rule_takeaway}`;
       const quantB = normalized.substring(qBMatch.index + qBMatch[0].length).trim();
 
       let html = '<div class="qc-container">';
+      if (figureHtml) {
+        html += figureHtml;
+      }
       if (context) {
         html += `<div class="qc-context-text">${escapeHtml(context).replace(/\n/g, '<br>')}</div>`;
       }
@@ -1469,7 +1491,7 @@ Golden Rule: ${question.rule_takeaway}`;
     }
 
     // Standard question text formatting
-    return escapeHtml(normalized).replace(/\n/g, '<br>');
+    return figureHtml + escapeHtml(normalized).replace(/\n/g, '<br>');
   }
 
   function escapeHtml(str) {
