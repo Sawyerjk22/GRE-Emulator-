@@ -1397,15 +1397,392 @@ Golden Rule: ${question.rule_takeaway}`;
     logTotalMissedPill.textContent = `Total Missed Questions: ${grandTotalMissed}`;
   }
 
-  // Calculator Toggle & Drag
-  calcToggleBtn.addEventListener('click', () => {
-    calculatorModal.style.display = calculatorModal.style.display === 'none' ? 'block' : 'none';
-  });
-  calcCloseBtn.addEventListener('click', () => {
-    calculatorModal.style.display = 'none';
-  });
+  // -------------------------------------------------------------
+  // AUTHENTIC ETS GRE ON-SCREEN CALCULATOR ENGINE
+  // -------------------------------------------------------------
+  const calcMemoryIndicator = document.getElementById('calcMemoryIndicator');
 
-  // Basic Calculator Keypad Logic
+  let calcCurrentDisplay = '0';
+  let calcWaitingForOperand = true;
+  let calcTokens = [];
+  let calcMemory = 0;
+
+  function updateCalcDisplayUI() {
+    calcDisplay.value = formatForDisplay(calcCurrentDisplay);
+    if (calcMemoryIndicator) {
+      calcMemoryIndicator.style.visibility = calcMemory !== 0 ? 'visible' : 'hidden';
+    }
+  }
+
+  function formatForDisplay(rawStr) {
+    if (!rawStr || rawStr === 'ERROR' || rawStr === 'Error' || rawStr === '-') return rawStr || '0';
+    const isNeg = rawStr.startsWith('-');
+    const core = isNeg ? rawStr.slice(1) : rawStr;
+    const parts = core.split('.');
+    const intWithCommas = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return (isNeg ? '-' : '') + intWithCommas + (parts.length > 1 ? '.' + parts[1] : (rawStr.endsWith('.') ? '.' : ''));
+  }
+
+  function formatCalcNumber(num) {
+    if (typeof num !== 'number' || isNaN(num) || !isFinite(num)) return 'ERROR';
+    if (Math.abs(num) > 99999999) return 'ERROR';
+
+    // Round to prevent IEEE 754 precision artifacts (e.g. 0.1 + 0.2 = 0.3)
+    let str = num.toPrecision(8);
+    if (str.includes('e')) {
+      const parsed = parseFloat(str);
+      if (Math.abs(parsed) > 99999999) return 'ERROR';
+      str = String(parsed);
+    }
+    const cleanNum = parseFloat(str);
+    let cleanStr = String(cleanNum);
+
+    // Limit decimal places to ensure maximum 8 digits
+    const isNeg = cleanStr.startsWith('-');
+    const core = isNeg ? cleanStr.slice(1) : cleanStr;
+    const parts = core.split('.');
+    if (parts.length === 2) {
+      const maxDecimals = Math.max(0, 8 - parts[0].length);
+      cleanStr = String(Number(cleanNum.toFixed(maxDecimals)));
+    }
+    return cleanStr;
+  }
+
+  function evaluateTokens(tokens) {
+    if (!tokens || tokens.length === 0) return 0;
+
+    // Auto-close any unclosed parentheses
+    let openCount = 0;
+    for (const t of tokens) {
+      if (t === '(') openCount++;
+      else if (t === ')') openCount = Math.max(0, openCount - 1);
+    }
+    const completedTokens = [...tokens];
+    while (openCount > 0) {
+      completedTokens.push(')');
+      openCount--;
+    }
+
+    // Shunting-yard to RPN (Reverse Polish Notation)
+    const outputQueue = [];
+    const operatorStack = [];
+    const precedence = { '+': 1, '-': 1, '*': 2, '/': 2 };
+
+    for (const token of completedTokens) {
+      if (typeof token === 'number') {
+        outputQueue.push(token);
+      } else if (token === '(') {
+        operatorStack.push(token);
+      } else if (token === ')') {
+        while (operatorStack.length > 0 && operatorStack[operatorStack.length - 1] !== '(') {
+          outputQueue.push(operatorStack.pop());
+        }
+        if (operatorStack.length > 0 && operatorStack[operatorStack.length - 1] === '(') {
+          operatorStack.pop();
+        }
+      } else if (token in precedence) {
+        while (
+          operatorStack.length > 0 &&
+          operatorStack[operatorStack.length - 1] !== '(' &&
+          precedence[operatorStack[operatorStack.length - 1]] >= precedence[token]
+        ) {
+          outputQueue.push(operatorStack.pop());
+        }
+        operatorStack.push(token);
+      }
+    }
+
+    while (operatorStack.length > 0) {
+      const op = operatorStack.pop();
+      if (op !== '(' && op !== ')') {
+        outputQueue.push(op);
+      }
+    }
+
+    // Evaluate RPN
+    const stack = [];
+    for (const item of outputQueue) {
+      if (typeof item === 'number') {
+        stack.push(item);
+      } else {
+        if (stack.length < 2) return NaN;
+        const b = stack.pop();
+        const a = stack.pop();
+        let res = 0;
+        if (item === '+') res = a + b;
+        else if (item === '-') res = a - b;
+        else if (item === '*') res = a * b;
+        else if (item === '/') {
+          if (b === 0) return 'ERROR';
+          res = a / b;
+        }
+        stack.push(res);
+      }
+    }
+
+    if (stack.length !== 1) return NaN;
+    return stack[0];
+  }
+
+  function getPureNumber(str) {
+    return parseFloat(String(str).replace(/,/g, ''));
+  }
+
+  function handleDigit(digit) {
+    if (calcCurrentDisplay === 'ERROR') {
+      calcCurrentDisplay = '0';
+      calcTokens = [];
+    }
+
+    if (calcWaitingForOperand) {
+      calcCurrentDisplay = digit;
+      calcWaitingForOperand = false;
+    } else {
+      const digitsCount = calcCurrentDisplay.replace(/[^0-9]/g, '').length;
+      if (digitsCount >= 8) return;
+
+      if (calcCurrentDisplay === '0') {
+        calcCurrentDisplay = digit;
+      } else {
+        calcCurrentDisplay += digit;
+      }
+    }
+    updateCalcDisplayUI();
+  }
+
+  function handleDecimal() {
+    if (calcCurrentDisplay === 'ERROR') {
+      calcCurrentDisplay = '0';
+      calcTokens = [];
+    }
+
+    if (calcWaitingForOperand) {
+      calcCurrentDisplay = '0.';
+      calcWaitingForOperand = false;
+    } else if (!calcCurrentDisplay.includes('.')) {
+      calcCurrentDisplay += '.';
+    }
+    updateCalcDisplayUI();
+  }
+
+  function handleSign() {
+    if (calcCurrentDisplay === 'ERROR' || calcCurrentDisplay === '0') return;
+    if (calcCurrentDisplay.startsWith('-')) {
+      calcCurrentDisplay = calcCurrentDisplay.slice(1);
+    } else {
+      calcCurrentDisplay = '-' + calcCurrentDisplay;
+    }
+    updateCalcDisplayUI();
+  }
+
+  function handleSqrt() {
+    if (calcCurrentDisplay === 'ERROR') return;
+    const num = getPureNumber(calcCurrentDisplay);
+    if (isNaN(num) || num < 0) {
+      calcCurrentDisplay = 'ERROR';
+      calcTokens = [];
+      calcWaitingForOperand = true;
+    } else {
+      const res = Math.sqrt(num);
+      calcCurrentDisplay = formatCalcNumber(res);
+      calcWaitingForOperand = true;
+    }
+    updateCalcDisplayUI();
+  }
+
+  function handleClearEntry() {
+    calcCurrentDisplay = '0';
+    calcWaitingForOperand = true;
+    updateCalcDisplayUI();
+  }
+
+  function handleClear() {
+    calcCurrentDisplay = '0';
+    calcWaitingForOperand = true;
+    calcTokens = [];
+    updateCalcDisplayUI();
+  }
+
+  function handleOperator(op) {
+    if (calcCurrentDisplay === 'ERROR') return;
+
+    const opMap = { add: '+', sub: '-', mult: '*', div: '/', '+': '+', '-': '-', '*': '*', '/': '/' };
+    const mappedOp = opMap[op] || op;
+
+    // If operator is clicked right after another operator, replace the operator
+    if (calcWaitingForOperand && calcTokens.length > 0) {
+      const lastToken = calcTokens[calcTokens.length - 1];
+      if (typeof lastToken === 'string' && lastToken !== '(' && lastToken !== ')') {
+        calcTokens[calcTokens.length - 1] = mappedOp;
+        return;
+      }
+    }
+
+    const currentVal = getPureNumber(calcCurrentDisplay);
+    calcTokens.push(currentVal);
+
+    // Precedence evaluation for pending operations
+    const precedence = { '+': 1, '-': 1, '*': 2, '/': 2 };
+    let lastOpenParenIdx = -1;
+    for (let i = calcTokens.length - 1; i >= 0; i--) {
+      if (calcTokens[i] === '(') {
+        lastOpenParenIdx = i;
+        break;
+      }
+    }
+
+    const prefix = lastOpenParenIdx >= 0 ? calcTokens.slice(0, lastOpenParenIdx + 1) : [];
+    const subTokens = lastOpenParenIdx >= 0 ? calcTokens.slice(lastOpenParenIdx + 1) : [...calcTokens];
+
+    if (subTokens.length >= 3) {
+      const prevOp = subTokens[subTokens.length - 2];
+      if (typeof prevOp === 'string' && precedence[prevOp] >= precedence[mappedOp]) {
+        const intermediate = evaluateTokens(subTokens);
+        if (intermediate === 'ERROR' || isNaN(intermediate)) {
+          calcCurrentDisplay = 'ERROR';
+          calcTokens = [];
+          calcWaitingForOperand = true;
+          updateCalcDisplayUI();
+          return;
+        }
+        calcCurrentDisplay = formatCalcNumber(intermediate);
+        calcTokens = [...prefix, intermediate, mappedOp];
+        calcWaitingForOperand = true;
+        updateCalcDisplayUI();
+        return;
+      }
+    }
+
+    calcTokens.push(mappedOp);
+    calcWaitingForOperand = true;
+    updateCalcDisplayUI();
+  }
+
+  function handleOpenParen() {
+    if (calcCurrentDisplay === 'ERROR') {
+      calcCurrentDisplay = '0';
+      calcTokens = [];
+    }
+
+    if (!calcWaitingForOperand) {
+      const currentVal = getPureNumber(calcCurrentDisplay);
+      calcTokens.push(currentVal);
+      calcTokens.push('*');
+    }
+
+    calcTokens.push('(');
+    calcCurrentDisplay = '0';
+    calcWaitingForOperand = true;
+    updateCalcDisplayUI();
+  }
+
+  function handleCloseParen() {
+    if (calcCurrentDisplay === 'ERROR') return;
+
+    let openCount = 0;
+    for (const t of calcTokens) {
+      if (t === '(') openCount++;
+      else if (t === ')') openCount = Math.max(0, openCount - 1);
+    }
+    if (openCount <= 0) return;
+
+    const currentVal = getPureNumber(calcCurrentDisplay);
+    calcTokens.push(currentVal);
+    calcTokens.push(')');
+
+    let depth = 0;
+    let matchIdx = -1;
+    for (let i = calcTokens.length - 1; i >= 0; i--) {
+      if (calcTokens[i] === ')') depth++;
+      else if (calcTokens[i] === '(') {
+        depth--;
+        if (depth === 0) {
+          matchIdx = i;
+          break;
+        }
+      }
+    }
+
+    if (matchIdx >= 0) {
+      const groupTokens = calcTokens.slice(matchIdx);
+      const groupResult = evaluateTokens(groupTokens);
+      if (groupResult === 'ERROR' || isNaN(groupResult)) {
+        calcCurrentDisplay = 'ERROR';
+        calcTokens = [];
+      } else {
+        calcCurrentDisplay = formatCalcNumber(groupResult);
+        calcTokens.splice(matchIdx, groupTokens.length, groupResult);
+      }
+    }
+
+    calcWaitingForOperand = true;
+    updateCalcDisplayUI();
+  }
+
+  function handleEquals() {
+    if (calcCurrentDisplay === 'ERROR') return;
+
+    if (calcTokens.length === 0) return;
+
+    const lastToken = calcTokens[calcTokens.length - 1];
+    if (typeof lastToken === 'string' && lastToken !== ')') {
+      const currentVal = getPureNumber(calcCurrentDisplay);
+      calcTokens.push(currentVal);
+    }
+
+    const result = evaluateTokens(calcTokens);
+    if (result === 'ERROR' || isNaN(result)) {
+      calcCurrentDisplay = 'ERROR';
+    } else {
+      calcCurrentDisplay = formatCalcNumber(result);
+    }
+
+    calcTokens = [];
+    calcWaitingForOperand = true;
+    updateCalcDisplayUI();
+  }
+
+  function handleMemory(action) {
+    if (action === 'mc') {
+      calcMemory = 0;
+    } else if (action === 'mr') {
+      calcCurrentDisplay = formatCalcNumber(calcMemory);
+      calcWaitingForOperand = true;
+    } else if (action === 'mplus') {
+      if (calcCurrentDisplay !== 'ERROR') {
+        const currentVal = getPureNumber(calcCurrentDisplay);
+        if (!isNaN(currentVal)) {
+          calcMemory += currentVal;
+          calcWaitingForOperand = true;
+        }
+      }
+    }
+    updateCalcDisplayUI();
+  }
+
+  function handleBackspace() {
+    if (calcCurrentDisplay === 'ERROR') {
+      handleClear();
+      return;
+    }
+    if (!calcWaitingForOperand) {
+      if (calcCurrentDisplay.length > 1) {
+        calcCurrentDisplay = calcCurrentDisplay.slice(0, -1);
+        if (calcCurrentDisplay === '-' || calcCurrentDisplay === '') {
+          calcCurrentDisplay = '0';
+          calcWaitingForOperand = true;
+        }
+      } else {
+        calcCurrentDisplay = '0';
+        calcWaitingForOperand = true;
+      }
+      updateCalcDisplayUI();
+    } else {
+      handleClearEntry();
+    }
+  }
+
+  // Calculator Keypad Event Listener
   const calcKeypad = document.querySelector('.calc-keypad');
   if (calcKeypad) {
     calcKeypad.addEventListener('click', (e) => {
@@ -1415,30 +1792,146 @@ Golden Rule: ${question.rule_takeaway}`;
       const action = btn.dataset.action;
 
       if (val !== undefined) {
-        if (calcDisplay.value === '0') calcDisplay.value = val;
-        else calcDisplay.value += val;
-      } else if (action === 'clear') {
-        calcDisplay.value = '0';
-      } else if (action === 'equals') {
-        try {
-          const evalExpr = calcDisplay.value.replace(/×/g, '*').replace(/÷/g, '/');
-          calcDisplay.value = String(eval(evalExpr));
-        } catch (err) {
-          calcDisplay.value = 'Error';
-        }
+        if (val === '.') handleDecimal();
+        else handleDigit(val);
+      } else if (action) {
+        if (action === 'clear') handleClear();
+        else if (action === 'clearEntry') handleClearEntry();
+        else if (action === 'sign') handleSign();
+        else if (action === 'sqrt') handleSqrt();
+        else if (action === 'add' || action === 'sub' || action === 'mult' || action === 'div') handleOperator(action);
+        else if (action === 'openParen') handleOpenParen();
+        else if (action === 'closeParen') handleCloseParen();
+        else if (action === 'equals') handleEquals();
+        else if (action === 'mr' || action === 'mc' || action === 'mplus') handleMemory(action);
       }
     });
   }
 
+  // Calculator Toggle & Close
+  calcToggleBtn.addEventListener('click', () => {
+    calculatorModal.style.display = calculatorModal.style.display === 'none' ? 'block' : 'none';
+  });
+  calcCloseBtn.addEventListener('click', () => {
+    calculatorModal.style.display = 'none';
+  });
+
+  // Transfer Display to Numeric Input
   transferDisplayBtn.addEventListener('click', () => {
+    if (calcCurrentDisplay === 'ERROR') {
+      showToast('Cannot transfer error to numeric answer.');
+      return;
+    }
+    const cleanNum = calcCurrentDisplay.replace(/,/g, '').trim();
     const numInput = document.getElementById('numericEntryInput');
     if (numInput) {
-      numInput.value = calcDisplay.value;
-      userAnswers[currentIndex] = calcDisplay.value;
+      numInput.value = cleanNum;
+      userAnswers[currentIndex] = cleanNum;
       updatePaletteUI();
-      showToast('Transferred calculator value to numeric entry field!');
+      showToast(`Transferred ${cleanNum} into answer field!`);
     } else {
       showToast('Numeric entry input is not active for this question.');
+    }
+  });
+
+  // Draggable Calculator Window (Mouse & Touch)
+  let isDraggingCalc = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+
+  function startCalcDrag(clientX, clientY, target) {
+    if (target === calcCloseBtn) return;
+    isDraggingCalc = true;
+    dragStartX = clientX;
+    dragStartY = clientY;
+
+    const rect = calculatorModal.getBoundingClientRect();
+    calculatorModal.style.bottom = 'auto';
+    calculatorModal.style.right = 'auto';
+    calculatorModal.style.left = `${rect.left}px`;
+    calculatorModal.style.top = `${rect.top}px`;
+    initialLeft = rect.left;
+    initialTop = rect.top;
+  }
+
+  function moveCalcDrag(clientX, clientY) {
+    if (!isDraggingCalc) return;
+    const dx = clientX - dragStartX;
+    const dy = clientY - dragStartY;
+    const maxLeft = Math.max(0, window.innerWidth - calculatorModal.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - calculatorModal.offsetHeight);
+    const newLeft = Math.max(0, Math.min(maxLeft, initialLeft + dx));
+    const newTop = Math.max(0, Math.min(maxTop, initialTop + dy));
+    calculatorModal.style.left = `${newLeft}px`;
+    calculatorModal.style.top = `${newTop}px`;
+  }
+
+  function stopCalcDrag() {
+    isDraggingCalc = false;
+  }
+
+  calcHeader.addEventListener('mousedown', (e) => {
+    startCalcDrag(e.clientX, e.clientY, e.target);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => moveCalcDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup', stopCalcDrag);
+
+  calcHeader.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      startCalcDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
+    }
+  }, { passive: true });
+  document.addEventListener('touchmove', (e) => {
+    if (isDraggingCalc && e.touches.length === 1) {
+      moveCalcDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+  document.addEventListener('touchend', stopCalcDrag);
+
+  // Global Keyboard Shortcuts (Alt+C toggle and keypad entry)
+  document.addEventListener('keydown', (e) => {
+    // Alt + C: Toggle Calculator
+    if (e.altKey && (e.key === 'c' || e.key === 'C')) {
+      e.preventDefault();
+      calculatorModal.style.display = calculatorModal.style.display === 'none' ? 'block' : 'none';
+      return;
+    }
+
+    // If calculator is visible and user is not typing in a text field
+    if (calculatorModal.style.display !== 'none') {
+      const activeEl = document.activeElement;
+      const isTypingElsewhere = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA') && activeEl !== calcDisplay;
+      if (isTypingElsewhere) return;
+
+      if (e.key >= '0' && e.key <= '9') {
+        handleDigit(e.key);
+      } else if (e.key === '.') {
+        handleDecimal();
+      } else if (e.key === '+') {
+        handleOperator('add');
+      } else if (e.key === '-') {
+        handleOperator('sub');
+      } else if (e.key === '*' || e.key === 'x' || e.key === 'X') {
+        handleOperator('mult');
+      } else if (e.key === '/') {
+        e.preventDefault();
+        handleOperator('div');
+      } else if (e.key === '(') {
+        handleOpenParen();
+      } else if (e.key === ')') {
+        handleCloseParen();
+      } else if (e.key === '=' || e.key === 'Enter') {
+        e.preventDefault();
+        handleEquals();
+      } else if (e.key === 'Backspace') {
+        e.preventDefault();
+        handleBackspace();
+      } else if (e.key === 'Escape') {
+        handleClear();
+      }
     }
   });
 

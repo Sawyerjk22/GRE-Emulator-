@@ -468,36 +468,42 @@
         <button id="calcCloseBtn" class="calc-close" title="Close Calculator">&times;</button>
       </div>
       <div class="calc-display-container">
+        <span id="calcMemoryIndicator" class="calc-mem-indicator" style="visibility: hidden;">M</span>
         <input type="text" id="calcDisplay" class="calc-display" value="0" readonly>
       </div>
       <div class="calc-keypad">
-        <button class="calc-btn btn-func" data-action="clear">C</button>
-        <button class="calc-btn btn-func" data-action="clearEntry">CE</button>
-        <button class="calc-btn btn-func" data-action="sign">±</button>
-        <button class="calc-btn btn-func" data-action="sqrt">√</button>
-        
+        <button class="calc-btn btn-mem" data-action="mr" title="Memory Recall">MR</button>
+        <button class="calc-btn btn-mem" data-action="mc" title="Memory Clear">MC</button>
+        <button class="calc-btn btn-mem" data-action="mplus" title="Memory Add">M+</button>
+        <button class="calc-btn btn-paren" data-action="openParen" title="Open Parenthesis">(</button>
+        <button class="calc-btn btn-paren" data-action="closeParen" title="Close Parenthesis">)</button>
+
         <button class="calc-btn btn-num" data-val="7">7</button>
         <button class="calc-btn btn-num" data-val="8">8</button>
         <button class="calc-btn btn-num" data-val="9">9</button>
-        <button class="calc-btn btn-op" data-action="div">÷</button>
-        
+        <button class="calc-btn btn-op" data-action="div" title="Divide">÷</button>
+        <button class="calc-btn btn-func" data-action="clear" title="Clear All (C)">C</button>
+
         <button class="calc-btn btn-num" data-val="4">4</button>
         <button class="calc-btn btn-num" data-val="5">5</button>
         <button class="calc-btn btn-num" data-val="6">6</button>
-        <button class="calc-btn btn-op" data-action="mult">×</button>
-        
+        <button class="calc-btn btn-op" data-action="mult" title="Multiply">×</button>
+        <button class="calc-btn btn-func" data-action="clearEntry" title="Clear Entry (CE)">CE</button>
+
         <button class="calc-btn btn-num" data-val="1">1</button>
         <button class="calc-btn btn-num" data-val="2">2</button>
         <button class="calc-btn btn-num" data-val="3">3</button>
-        <button class="calc-btn btn-op" data-action="sub">-</button>
-        
+        <button class="calc-btn btn-op" data-action="sub" title="Subtract">−</button>
+        <button class="calc-btn btn-func" data-action="sqrt" title="Square Root">√</button>
+
+        <button class="calc-btn btn-func" data-action="sign" title="Change Sign">±</button>
         <button class="calc-btn btn-num" data-val="0">0</button>
         <button class="calc-btn btn-num" data-val=".">.</button>
-        <button class="calc-btn btn-equals" data-action="equals">=</button>
-        <button class="calc-btn btn-op" data-action="add">+</button>
+        <button class="calc-btn btn-op" data-action="add" title="Add">+</button>
+        <button class="calc-btn btn-equals" data-action="equals" title="Calculate (=)">=</button>
       </div>
       <button id="transferDisplayBtn" class="calc-transfer-btn" title="Transfer display value into Numeric Entry field">
-        Transfer Display to Input
+        Transfer Display
       </button>
     </div>
 
