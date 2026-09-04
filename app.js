@@ -500,9 +500,12 @@ Golden Rule: ${question.rule_takeaway}`;
             return {
               ...q,
               sessionNum: idx + 1,
+              type: q.type || q.question_type || 'single',
+              question_type: q.question_type || q.type || 'single',
               text: varData.question_text,
               options: varData.options || q.options,
-              correct: varData.correct_answer || q.correct_answer,
+              correct: varData.correct_answer || q.correct_answer || q.correct,
+              correct_answer: varData.correct_answer || q.correct_answer || q.correct,
               explanation: varData.explanation || q.explanation,
               isAiVariation: true
             };
@@ -513,9 +516,12 @@ Golden Rule: ${question.rule_takeaway}`;
         return { 
           ...q, 
           sessionNum: idx + 1,
+          type: q.type || q.question_type || 'single',
+          question_type: q.question_type || q.type || 'single',
           text: q.question_text || q.text || "Question text unavailable",
           options: typeof q.options === 'string' ? (JSON.parse(q.options || '[]')) : (q.options || []),
-          correct: q.correct_answer || q.correct || ""
+          correct: q.correct_answer || q.correct || "",
+          correct_answer: q.correct_answer || q.correct || ""
         };
       }));
     } else {
@@ -527,9 +533,12 @@ Golden Rule: ${question.rule_takeaway}`;
         return {
           ...q,
           sessionNum: idx + 1,
+          type: q.type || q.question_type || 'single',
+          question_type: q.question_type || q.type || 'single',
           text: q.question_text || q.text || "Question text unavailable",
           options: opts,
-          correct: q.correct_answer || q.correct || ""
+          correct: q.correct_answer || q.correct || "",
+          correct_answer: q.correct_answer || q.correct || ""
         };
       });
     }
@@ -622,7 +631,9 @@ Golden Rule: ${question.rule_takeaway}`;
     buttons.forEach((btn, idx) => {
       btn.classList.remove('active', 'answered', 'marked');
       if (idx === currentIndex) btn.classList.add('active');
-      if (userAnswers[idx] !== null && userAnswers[idx] !== undefined && String(userAnswers[idx]).trim() !== '') {
+      const ans = userAnswers[idx];
+      const isAnswered = ans !== null && ans !== undefined && (Array.isArray(ans) ? ans.length > 0 : String(ans).trim() !== '');
+      if (isAnswered) {
         btn.classList.add('answered');
       }
       if (markedQuestions.has(idx)) {
@@ -676,7 +687,7 @@ Golden Rule: ${question.rule_takeaway}`;
     activeQuestions.forEach((q, idx) => {
       const tr = document.createElement('tr');
       const uAns = userAnswers[idx];
-      const isAnswered = uAns !== null && uAns !== undefined && String(uAns).trim() !== '';
+      const isAnswered = uAns !== null && uAns !== undefined && (Array.isArray(uAns) ? uAns.length > 0 : String(uAns).trim() !== '');
       const isMarked = markedQuestions.has(idx);
 
       tr.innerHTML = `
@@ -699,6 +710,111 @@ Golden Rule: ${question.rule_takeaway}`;
     reviewModal.style.display = 'flex';
   }
 
+  // Question Type & Kind Evaluator (Authentic ETS GRE Classification)
+  function getQuestionKind(q) {
+    if (!q) return 'single';
+    const displayText = q.text || q.question_text || q.questionText || "";
+    const isQC = /Quantity\s+A\s*:/i.test(displayText) && /Quantity\s+B\s*:/i.test(displayText);
+    if (isQC) return 'qc';
+
+    const qType = (q.type || q.question_type || '').toLowerCase();
+    let opts = q.options || [];
+    if (typeof opts === 'string') {
+      try { opts = JSON.parse(opts); } catch(e) { opts = []; }
+    }
+    const hasNoOptions = !opts || opts.length === 0;
+
+    if (qType === 'numeric' || hasNoOptions) {
+      return 'numeric';
+    }
+
+    const isMultiText = /select\s+all\s+that\s+apply|indicate\s+all\s+such|select\s+one\s+or\s+more|indicate\s+all\s+possible/i.test(displayText);
+    const corr = q.correct_answer || q.correct;
+    const isMultiCorr = (Array.isArray(corr) && qType !== 'single' && qType !== 'numeric') || 
+                        (typeof corr === 'string' && corr.includes(',') && qType !== 'single');
+
+    if (qType === 'multiple' || isMultiText || isMultiCorr) {
+      return 'multiple';
+    }
+
+    return 'single';
+  }
+
+  function normalizeChoiceOption(val) {
+    if (!val) return '';
+    const s = String(val).trim();
+    const m = s.match(/^([A-Za-z])(?:\s*[:.)\s]|$)/);
+    if (m) return m[1].toUpperCase();
+    return s.toLowerCase();
+  }
+
+  function parseNumericOrFraction(val) {
+    if (!val) return NaN;
+    const s = String(val).trim().replace(/%/g, '');
+    if (s.includes('/')) {
+      const parts = s.split('/');
+      if (parts.length === 2) {
+        const num = parseFloat(parts[0]);
+        const den = parseFloat(parts[1]);
+        if (!isNaN(num) && !isNaN(den) && den !== 0) return num / den;
+      }
+    }
+    return parseFloat(s);
+  }
+
+  function isAnswerCorrect(uAns, cAns, kind) {
+    if (uAns === null || uAns === undefined) return false;
+
+    if (kind === 'multiple') {
+      const uArr = Array.isArray(uAns) ? uAns : (String(uAns).trim() ? [uAns] : []);
+      let cArr = [];
+      if (Array.isArray(cAns)) {
+        cArr = cAns;
+      } else if (typeof cAns === 'string') {
+        try {
+          const parsed = JSON.parse(cAns);
+          cArr = Array.isArray(parsed) ? parsed : [cAns];
+        } catch (e) {
+          cArr = cAns.split(',').map(s => s.trim()).filter(Boolean);
+        }
+      }
+      if (uArr.length === 0 || cArr.length === 0) return false;
+      if (uArr.length !== cArr.length) return false;
+
+      const uNorm = uArr.map(normalizeChoiceOption).sort();
+      const cNorm = cArr.map(normalizeChoiceOption).sort();
+      return uNorm.every((val, i) => val === cNorm[i]);
+    } else if (kind === 'numeric') {
+      const uStr = String(uAns).trim().toLowerCase();
+      if (!uStr) return false;
+      let cList = [];
+      if (Array.isArray(cAns)) {
+        cList = cAns;
+      } else if (typeof cAns === 'string') {
+        try {
+          const parsed = JSON.parse(cAns);
+          cList = Array.isArray(parsed) ? parsed : [cAns];
+        } catch (e) {
+          cList = [cAns];
+        }
+      }
+      return cList.some(c => {
+        const cStr = String(c).trim().toLowerCase();
+        if (uStr === cStr) return true;
+        const uNum = parseNumericOrFraction(uStr);
+        const cNum = parseNumericOrFraction(cStr);
+        if (!isNaN(uNum) && !isNaN(cNum) && Math.abs(uNum - cNum) < 1e-6) return true;
+        return false;
+      });
+    } else {
+      const uStr = String(uAns).trim();
+      const cStr = String(cAns).trim();
+      if (!uStr || !cStr) return false;
+      if (uStr.toLowerCase() === cStr.toLowerCase()) return true;
+      return normalizeChoiceOption(uStr) === normalizeChoiceOption(cStr);
+    }
+  }
+
   // Question Rendering Engine (Authentic ETS Exam Layout)
   function renderQuestion(index) {
     const q = activeQuestions[index];
@@ -709,13 +825,14 @@ Golden Rule: ${question.rule_takeaway}`;
     progressBar.style.width = `${pct}%`;
 
     const displayText = q.text || q.question_text || q.questionText || "";
-    const isQC = /Quantity\s+A\s*:/i.test(displayText) && /Quantity\s+B\s*:/i.test(displayText);
+    const qKind = getQuestionKind(q);
+    const isMultiSelect = (qKind === 'multiple');
 
-    if (isQC) {
+    if (qKind === 'qc') {
       typePill.textContent = 'Quantitative Comparison';
-    } else if (q.question_type === 'numeric' || (!q.options || q.options.length === 0)) {
+    } else if (qKind === 'numeric') {
       typePill.textContent = 'Numeric Entry';
-    } else if (q.question_type === 'multiple' || (q.correct && q.correct.includes(','))) {
+    } else if (qKind === 'multiple') {
       typePill.textContent = 'Select One or More';
     } else {
       typePill.textContent = 'Multiple Choice';
@@ -737,9 +854,7 @@ Golden Rule: ${question.rule_takeaway}`;
       try { opts = JSON.parse(opts); } catch(e) { opts = []; }
     }
 
-    if (opts.length > 0) {
-      const isMultiSelect = typePill.textContent === 'Select One or More';
-
+    if (opts.length > 0 && qKind !== 'numeric') {
       opts.forEach((optStr) => {
         const optionRow = document.createElement('div');
         optionRow.className = 'ets-option-row';
@@ -998,9 +1113,18 @@ Golden Rule: ${question.rule_takeaway}`;
     const missedItems = [];
 
     activeQuestions.forEach((q, idx) => {
-      const uAns = userAnswers[idx] || '(No Answer)';
+      const qKind = getQuestionKind(q);
       const cAns = q.correct_answer || q.correct;
-      const isCorrect = String(uAns).trim().toLowerCase() === String(cAns).trim().toLowerCase();
+      const isCorrect = isAnswerCorrect(userAnswers[idx], cAns, qKind);
+
+      const uAns = userAnswers[idx];
+      const formattedUserAns = Array.isArray(uAns)
+        ? (uAns.length > 0 ? uAns.join(', ') : '(No Answer)')
+        : (uAns && String(uAns).trim() ? String(uAns).trim() : '(No Answer)');
+
+      const formattedCorrectAns = Array.isArray(cAns)
+        ? cAns.join(', ')
+        : String(cAns || '');
 
       if (isCorrect) {
         correctCount++;
@@ -1008,8 +1132,8 @@ Golden Rule: ${question.rule_takeaway}`;
         missedItems.push({
           question_id: q.id,
           question_text: q.text,
-          user_answer: uAns,
-          correct_answer: cAns,
+          user_answer: formattedUserAns,
+          correct_answer: formattedCorrectAns,
           trap_type: q.trap_type || 'Quantitative Trap',
           trap_description: q.trap_description || 'Trick designed to penalize mechanical textbook math solving.',
           hack_solution: q.hack_solution || q.explanation || 'Shortcut: Test boundary values and plug simple test numbers.',
@@ -1988,9 +2112,10 @@ Golden Rule: ${question.rule_takeaway}`;
   }
 
   function escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
+    if (Array.isArray(str)) str = str.join(', ');
     const div = document.createElement('div');
-    div.textContent = str;
+    div.textContent = String(str);
     return div.innerHTML;
   }
 });
